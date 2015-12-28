@@ -7,13 +7,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 public class DatabaseHandler {
-
-	public static void main( String args[] ) {
-		
-		DatabaseHandler dbh = new DatabaseHandler();
-		dbh.initialize();
-		
-	}
 	
 	public void initialize() {
 		
