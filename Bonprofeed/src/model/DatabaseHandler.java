@@ -6,11 +6,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import com.mysql.jdbc.exceptions.jdbc4.MySQLDataException;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+
 public class DatabaseHandler {
 	
 	public DatabaseHandler() {
 		super();
-		initialize();
 	}
 	
 	public boolean createFolder(String name){
@@ -98,9 +100,10 @@ public class DatabaseHandler {
 		
 		if ( !connected ) {
 			this.createDatabase();
-		}
+		} else {
 		
-		try { connection.close(); } catch (SQLException e) { e.printStackTrace(); }
+			try { connection.close(); } catch (SQLException e) { e.printStackTrace(); }
+		}
 	}
 	
 	private Connection getConnection() {
@@ -176,8 +179,8 @@ public class DatabaseHandler {
 		
 		String tablaFeeds = "CREATE TABLE IF NOT EXISTS `feeds` ("
 				+"`id` int(11) NOT NULL,"
-				  +"`name` varchar(50) NOT NULL,"
-				  +"`url` varchar(255) NOT NULL"
+				  +"`name` varchar(50) UNIQUE NOT NULL,"
+				  +"`url` varchar(255) UNIQUE NOT NULL"
 				+") ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 		
 		String tablaFeeds_folders = "CREATE TABLE IF NOT EXISTS `feeds_folders` ("
@@ -324,11 +327,36 @@ public class DatabaseHandler {
 		try {
 			statement = conn.createStatement();
 			ret = statement.executeUpdate(sql);
+		
+		} catch ( MySQLIntegrityConstraintViolationException e ) {
+			
+			System.out.println( "La entrada ya existe en la base de datos." );
+		
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		
 		return ret;
-	}	
+	}
+	
+	public void clearDatabase() {
+		
+		Connection con = getConnection();
+
+		try {
+			
+			Statement sta = con.createStatement();
+			
+			sta.executeUpdate( "DELETE FROM feeds;");
+			sta.executeUpdate( "DELETE FROM articles;");
+			sta.executeUpdate( "DELETE FROM folders;");
+			sta.executeUpdate( "DELETE FROM tags;");
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	
 }
