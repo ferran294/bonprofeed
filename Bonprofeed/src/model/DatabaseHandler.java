@@ -2,18 +2,83 @@ package model;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
-
 import java.sql.Statement;
 
 public class DatabaseHandler {
+	
+	public DatabaseHandler() {
+		super();
+		initialize();
+	}
+	
+	public boolean createFolder(String name){
+		Connection conn = getConnection();
+		Statement statement = null;
+		
+		String queryFolderSql = String.format("SELECT id FROM folders WHERE name = %s;",name);
+		
+		ResultSet rs = null;
+		
+		try {
+			
+			statement = conn.createStatement();
+			rs = statement.executeQuery(queryFolderSql);
+		
+		
+			if (!rs.isBeforeFirst() ) {    //No existe
+				String createFolderSql = String.format("INSERT INTO folders (name) VALUES (%s);",name);
+				statement.executeUpdate(createFolderSql);
+				return true;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+		    try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+		    try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+		}
+		
+		return false;
+	}
+	
+	//Set nombre de carpeta (Update y devuelve true si el nombre no existe,si existe devuelve false)
+	public boolean setFolderName(int id,String name){
+		
+		Connection con = getConnection();
+		Statement statement = null;
+		ResultSet rs = null;
+		
+		String queryFolderSql = String.format("SELECT id FROM folders WHERE name = %s;",name);
+		
+		try {
+			statement = con.createStatement();
+			rs = statement.executeQuery(queryFolderSql);
+	
+			if (!rs.isBeforeFirst() ) {    //No existe
+				String updateFolderSql = String.format("UPDATE folders SET name = %s WHERE id = %d;",name,id);
+				statement.executeUpdate(updateFolderSql);
+				return true;
+			}
+		} catch ( SQLException e ) {
+			
+			e.printStackTrace();
+		
+		} finally {
+			try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+		    try { con.close(); } catch (SQLException e) { e.printStackTrace(); }
+		    try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+		}
+		
+		return false;
+	}
 	
 	public void initialize() {
 		
 		boolean connected = false;
 		Connection connection = null;
-		Statement statement = null;
-		
 		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
@@ -34,9 +99,11 @@ public class DatabaseHandler {
 		if ( !connected ) {
 			this.createDatabase();
 		}
+		
+		try { connection.close(); } catch (SQLException e) { e.printStackTrace(); }
 	}
 	
-	public Connection getConnection() {
+	private Connection getConnection() {
 		Connection connection = null;
 		
 		try {
@@ -60,10 +127,13 @@ public class DatabaseHandler {
 	 */
 	private void createDatabase() {
 		
+		Connection connection = null ;
+		Statement statement = null;
+		
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
-			Connection connection = DriverManager.getConnection( "jdbc:mysql://localhost/", "root", "" );
-			Statement statement = connection.createStatement();
+			connection = DriverManager.getConnection( "jdbc:mysql://localhost/", "root", "" );
+			statement = connection.createStatement();
 			String sql = "CREATE DATABASE bonprofeed";
 			
 			statement.executeUpdate( sql );
@@ -76,7 +146,10 @@ public class DatabaseHandler {
 		
 		} catch ( SQLException e ) {
 			e.printStackTrace();
-		}	
+		} finally {
+			try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+		    try { connection.close(); } catch (SQLException e) { e.printStackTrace(); }
+		}
 	}
 	
 	/**
@@ -89,6 +162,7 @@ public class DatabaseHandler {
 		//Realizando conexion a base de datos recien creada
 		Connection connection=this.getConnection();
 		Statement statement=null;
+		
 		String tablaArticles = "CREATE TABLE IF NOT EXISTS `articles` ("
 				  +"`id` int(11) NOT NULL,"
 				  +"`title` varchar(255) NOT NULL,"
@@ -225,8 +299,36 @@ public class DatabaseHandler {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} 
+		} finally {
+			
+			try {
+				statement.close();
+				connection.close();
+			
+			} catch ( SQLException e ) {
+				e.printStackTrace();
+			}
 		
+		}
+		
+	}
+
+	public int insertFeed(String url, String name) {
+		
+		Connection conn = getConnection();
+		Statement statement = null;
+		int ret = 0;
+		
+		String sql = String.format("INSERT INTO feeds ( name, url ) VALUES ( '%s', '%s' );", name, url );
+		
+		try {
+			statement = conn.createStatement();
+			ret = statement.executeUpdate(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return ret;
 	}	
 	
 }
