@@ -339,6 +339,23 @@ public class DatabaseHandler {
 		return ret;
 	}
 	
+	public int deleteFeed(String name) {
+		Connection con = getConnection();
+		Statement statement = null;
+		int ret = 0;
+		
+		String sql = String.format( "DELETE FROM feeds WHERE name = '%s';", name);
+		
+		try {
+			statement = con.createStatement();
+			ret = statement.executeUpdate(sql);
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return ret;
+	}
+	
 	public void clearDatabase() {
 		
 		Connection con = getConnection();
