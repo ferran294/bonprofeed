@@ -15,35 +15,26 @@ public class DatabaseHandler {
 		super();
 	}
 	
-	public boolean createFolder(String name){
+	public int createFolder(String name){
 		Connection conn = getConnection();
 		Statement statement = null;
+		int ret = 0;
 		
-		String queryFolderSql = String.format("SELECT id FROM folders WHERE name = %s;",name);
-		
-		ResultSet rs = null;
+		String sql = String.format("INSERT INTO folders ( name ) VALUES ( '%s' );", name );
 		
 		try {
-			
 			statement = conn.createStatement();
-			rs = statement.executeQuery(queryFolderSql);
+			ret = statement.executeUpdate(sql);
 		
-		
-			if (!rs.isBeforeFirst() ) {    //No existe
-				String createFolderSql = String.format("INSERT INTO folders (name) VALUES (%s);",name);
-				statement.executeUpdate(createFolderSql);
-				return true;
-			}
+		} catch ( MySQLIntegrityConstraintViolationException e ) {
 			
+			System.out.println( "La carpeta ya existe." );
+		
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
-			try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
-		    try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
-		    try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
 		}
 		
-		return false;
+		return ret;
 	}
 	
 	//Set nombre de carpeta (Update y devuelve true si el nombre no existe,si existe devuelve false)
@@ -197,7 +188,7 @@ public class DatabaseHandler {
 		
 		String tablaFolders = "CREATE TABLE IF NOT EXISTS `folders` ("
 				+"`id` int(11) NOT NULL,"
-				  +"`name` varchar(50) NOT NULL,"
+				  +"`name` varchar(50) UNIQUE NOT NULL,"
 				 +"`date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP"
 				+") ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 		
