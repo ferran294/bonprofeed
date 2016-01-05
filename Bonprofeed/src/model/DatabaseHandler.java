@@ -15,6 +15,52 @@ public class DatabaseHandler {
 		super();
 	}
 	
+	public int createTag( String name ) {
+		Connection conn = getConnection();
+		Statement statement = null;
+		int ret = 0;
+		
+		String sql = String.format("INSERT INTO tags ( name ) VALUES ( '%s' );", name );
+		
+		try {
+			statement = conn.createStatement();
+			ret = statement.executeUpdate(sql);
+		
+		} catch ( MySQLIntegrityConstraintViolationException e ) {
+			
+			System.out.println( "ERROR: La etiqueta ya existe." );
+		
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+		    try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+		}
+		
+		return ret;
+		
+	}
+	
+	public int deleteFolder( String name ) {
+		int ret = 0;
+		Connection con = getConnection();
+		Statement statement = null;
+		
+		String sql = String.format( "DELETE FROM folders WHERE name = '%s';", name);
+		
+		try {
+			statement = con.createStatement();
+			ret = statement.executeUpdate(sql);
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+		    try { con.close(); } catch (SQLException e) { e.printStackTrace(); }
+		}
+		
+		return ret;
+	}
+	
 	public int renameFolder( String oldName, String newName ) {
 		Connection con = getConnection();
 		Statement sta = null;
@@ -219,7 +265,7 @@ public class DatabaseHandler {
 		
 		String tablaTags = "CREATE TABLE IF NOT EXISTS `tags` ("
 				+"`id` int(11) NOT NULL,"
-				  +"`name` varchar(50) NOT NULL"
+				  +"`name` varchar(50) UNIQUE NOT NULL"
 				+") ENGINE=InnoDB DEFAULT CHARSET=utf8;";
 		
 		//Indices
