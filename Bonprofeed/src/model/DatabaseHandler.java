@@ -32,6 +32,9 @@ public class DatabaseHandler {
 		
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+		    try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
 		}
 		
 		return ret;
@@ -60,8 +63,7 @@ public class DatabaseHandler {
 			e.printStackTrace();
 		
 		} finally {
-			try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
-		    try { con.close(); } catch (SQLException e) { e.printStackTrace(); }
+			
 		    try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
 		}
 		
@@ -325,6 +327,9 @@ public class DatabaseHandler {
 		
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+		    try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
 		}
 		
 		return ret;
@@ -342,6 +347,9 @@ public class DatabaseHandler {
 			ret = statement.executeUpdate(sql);
 		} catch(SQLException e) {
 			e.printStackTrace();
+		} finally {
+			try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+		    try { con.close(); } catch (SQLException e) { e.printStackTrace(); }
 		}
 		
 		return ret;
@@ -350,10 +358,11 @@ public class DatabaseHandler {
 	public void clearDatabase() {
 		
 		Connection con = getConnection();
-
+		Statement sta = null;
+		
 		try {
 			
-			Statement sta = con.createStatement();
+			sta = con.createStatement();
 			
 			sta.executeUpdate( "DELETE FROM feeds;");
 			sta.executeUpdate( "DELETE FROM articles;");
@@ -363,6 +372,9 @@ public class DatabaseHandler {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			try { sta.close(); } catch (SQLException e) { e.printStackTrace(); }
+		    try { con.close(); } catch (SQLException e) { e.printStackTrace(); }
 		}
 		
 	}
