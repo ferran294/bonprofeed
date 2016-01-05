@@ -15,6 +15,29 @@ public class DatabaseHandler {
 		super();
 	}
 	
+	public int renameFolder( String oldName, String newName ) {
+		Connection con = getConnection();
+		Statement sta = null;
+		int ret = 0;
+		
+		String sql = String.format( "UPDATE folders SET name = '%s' WHERE name = '%s';", newName, oldName );
+		
+		try {
+			sta = con.createStatement();
+			ret = sta.executeUpdate( sql );
+		} catch( MySQLIntegrityConstraintViolationException e ) {
+			System.out.println("ERROR: Ya existe una carpeta con el mismo nombre.");
+		} catch ( SQLException e) {
+			e.printStackTrace();
+		
+		} finally {
+			try { sta.close(); } catch (SQLException e) { e.printStackTrace(); }
+		    try { con.close(); } catch (SQLException e) { e.printStackTrace(); }
+		}
+		
+		return ret;
+	}
+	
 	public int createFolder(String name){
 		Connection conn = getConnection();
 		Statement statement = null;
@@ -28,7 +51,7 @@ public class DatabaseHandler {
 		
 		} catch ( MySQLIntegrityConstraintViolationException e ) {
 			
-			System.out.println( "La carpeta ya existe." );
+			System.out.println( "ERROR: La carpeta ya existe." );
 		
 		} catch (SQLException e) {
 			e.printStackTrace();
