@@ -729,4 +729,34 @@ public class DatabaseHandler {
 		
 	}
 	
+	public ArrayList<Tag> getTags() {
+		ArrayList<Tag> tags = new ArrayList<Tag>();
+		
+		Connection con = getConnection();
+		Statement statement = null;
+		ResultSet rs = null;
+		
+		try {
+			statement = con.createStatement();
+			String getTagsSQL = "SELECT id, name FROM tags;";
+			
+			rs = statement.executeQuery( getTagsSQL );
+			
+			while( rs.next() ) {
+				String name = rs.getString("name");
+				Tag tag = new Tag( name );
+				tags.add(tag);
+			}
+			
+			try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+			try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+		    try { con.close(); } catch (SQLException e) { e.printStackTrace(); }
+			
+		} catch ( SQLException e ) {
+			e.printStackTrace();
+		}
+		
+		return tags;
+	}
+	
 }
