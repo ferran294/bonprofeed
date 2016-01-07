@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="392.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="controller.ControllerNewFeed">
+  <!-- TODO Add Nodes -->
+  <children>
+    <TextField fx:id="textUrl" layoutX="247.0" layoutY="181.0" prefHeight="33.0" prefWidth="289.0" promptText="Escribe aqui" text="" />
+    <Label layoutX="14.0" layoutY="190.0" prefWidth="233.0" text="Introduce la URL del Feed:" />
+    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="133.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="600.0" />
+    <Label layoutX="39.0" layoutY="82.0" prefHeight="33.0" prefWidth="350.0" text="Añadir un nuevo Feed" textFill="WHITE">
+      <font>
+        <Font size="23.0" />
+      </font>
+    </Label>
+    <Button fx:id="btnAceptar" layoutX="246.0" layoutY="254.0" mnemonicParsing="false" onAction="#addFeed" prefHeight="33.0" prefWidth="109.0" text="Aceptar" />
+    <Label fx:id="errorFeedLabel" alignment="CENTER" focusTraversable="false" layoutX="91.0" layoutY="316.0" opacity="1.0" prefHeight="33.0" prefWidth="445.0" text="" textAlignment="CENTER" textFill="#cc0000" visible="true" wrapText="false">
+      <font>
+        <Font name="System Bold" size="14.0" />
+      </font>
+    </Label>
+  </children>
+</AnchorPane>
