@@ -646,13 +646,12 @@ public class DatabaseHandler {
 				folders.add(folder);
 			}
 			
-		} catch ( SQLException e ) {
-			e.printStackTrace();
-		} finally {
-			
 			try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
 			try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
 		    try { con.close(); } catch (SQLException e) { e.printStackTrace(); }
+			
+		} catch ( SQLException e ) {
+			e.printStackTrace();
 		}
 		
 		return folders;
@@ -674,16 +673,60 @@ public class DatabaseHandler {
 				feeds.add(f);
 			}
 			
+			try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+			try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+		    try { con.close(); } catch (SQLException e) { e.printStackTrace(); }
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
+		}
+		
+		return feeds;
+	}
+	
+	public ArrayList<Feed> getTaggedFeeds( String tag ) {
+		Connection con = getConnection();
+		Statement statement = null;
+		ResultSet rs = null;
+		
+		ArrayList<Integer> feedsIds = new ArrayList<Integer>();
+		ArrayList<Feed> feedsList = new ArrayList<Feed>();
+		
+		try {
+			statement = con.createStatement();
+			String getTagIdSQL = String.format("SELECT id FROM tags WHERE name = '%s';", tag );
+			rs = statement.executeQuery(getTagIdSQL);
+			rs.next();
+			int idTag = rs.getInt("id");
+			
+			String getFeedsFromTagSQL = String.format("SELECT id_feed FROM feeds_tags WHERE id_tag = %d;", idTag);
+			rs = statement.executeQuery(getFeedsFromTagSQL);
+			
+			// Itera sobre todos ids de los feeds de una carpeta.
+			while( rs.next() ) {			
+				int idFeed = rs.getInt("id_feed");
+				feedsIds.add(idFeed);
+			}
+			
+			for( int i = 0; i < feedsIds.size(); i++ ) {
+				String getFeedSQL = String.format("SELECT name, url FROM feeds WHERE id = %d;" , feedsIds.get(i) );
+				rs = statement.executeQuery(getFeedSQL);
+				
+				rs.next();
+				Feed feed = new Feed( rs.getString("name"), rs.getString("url") );
+				feedsList.add(feed);
+			}
 			
 			try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
 			try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
 		    try { con.close(); } catch (SQLException e) { e.printStackTrace(); }
-		}
 		
-		return feeds;
+		} catch ( SQLException e ) {
+			e.printStackTrace();
+		}
+			
+		return feedsList;
+		
 	}
 	
 }
