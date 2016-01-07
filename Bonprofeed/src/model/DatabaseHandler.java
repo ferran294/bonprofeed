@@ -447,5 +447,45 @@ public class DatabaseHandler {
 		}
 		
 	}
+
+	public int asignTag(String feed, String tag) {
+		
+		Connection con = getConnection();
+		Statement statement = null;
+		ResultSet rs = null;
+		int ret = 0;
+		
+		String sqlIdFeed = String.format( "SELECT id FROM feeds WHERE name = '%s';", feed);
+		String sqlIdTag = String.format( "SELECT id FROM tags WHERE name = '%s';", tag );
+		
+		try {
+			statement = con.createStatement();
+			
+			rs = statement.executeQuery(sqlIdFeed);
+			rs.next();
+			int idFeed = rs.getInt("id");
+			try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+			
+			rs = statement.executeQuery(sqlIdTag);
+			rs.next();
+			int idTag = rs.getInt("id");
+			try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+			
+			String assignTag = String.format("INSERT INTO feeds_tags (id_feed, id_tag) VALUES ( %d, %d );", idFeed, idTag );
+			ret = statement.executeUpdate( assignTag );
+		
+		} catch ( MySQLIntegrityConstraintViolationException e ) {
+			System.out.println( "La etiqueta ya está asignada a esta fuente de datos.");
+		
+		} catch(SQLException e) {
+			e.printStackTrace();
+		
+		} finally {
+			try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+		    try { con.close(); } catch (SQLException e) { e.printStackTrace(); }
+		}
+		
+		return ret;
+	}
 	
 }
