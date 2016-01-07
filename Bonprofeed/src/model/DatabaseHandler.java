@@ -543,5 +543,41 @@ public class DatabaseHandler {
 		
 		return ret;
 	}
+
+	public int putFeedIntoFolder(String feed, String folder) {
+		Connection con = getConnection();
+		Statement statement = null;
+		ResultSet rs = null;
+		int ret = 0;
+		
+		String sqlIdFeed = String.format( "SELECT id FROM feeds WHERE name = '%s';", feed);
+		String sqlIdFolder = String.format( "SELECT id FROM folders WHERE name = '%s';", folder );
+		
+		try {
+			statement = con.createStatement();
+			
+			rs = statement.executeQuery(sqlIdFeed);
+			rs.next();
+			int idFeed = rs.getInt("id");
+			try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+			
+			rs = statement.executeQuery(sqlIdFolder);
+			rs.next();
+			int idFolder = rs.getInt("id");
+			try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+			
+			String putInFolderSQL = String.format("INSERT INTO feeds_folders (id_folder, id_feed) VALUES ( %d, %d);", idFolder, idFeed );
+			ret = statement.executeUpdate( putInFolderSQL );
+		
+		} catch(SQLException e) {
+			e.printStackTrace();
+		
+		} finally {
+			try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+		    try { con.close(); } catch (SQLException e) { e.printStackTrace(); }
+		}
+		
+		return ret;
+	}
 	
 }
