@@ -22,7 +22,7 @@ public class TestAddSubscription {
 	}
 	
 	@BeforeClass
-	public static void clearTableFeeds() {	
+	public static void clearDatabase() {	
 		dbh = new DatabaseHandler();
 		dbh.clearDatabase();
 	}
