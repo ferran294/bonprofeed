@@ -5,22 +5,15 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
-import com.mysql.jdbc.exceptions.jdbc4.MySQLDataException;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 
 public class DatabaseHandler {
 	
 	public DatabaseHandler() {
 		super();
-	}
-	
-	public LinkedList<Feed> getFeedsFromFolder(String name){
-		
-		
-		return null;
-		
 	}
 	
 	public int createTag( String name ) {
@@ -550,6 +543,118 @@ public class DatabaseHandler {
 		}
 		
 		return ret;
+	}
+
+	public int putFeedIntoFolder(String feed, String folder) {
+		Connection con = getConnection();
+		Statement statement = null;
+		ResultSet rs = null;
+		int ret = 0;
+		
+		String sqlIdFeed = String.format( "SELECT id FROM feeds WHERE name = '%s';", feed);
+		String sqlIdFolder = String.format( "SELECT id FROM folders WHERE name = '%s';", folder );
+		
+		try {
+			statement = con.createStatement();
+			
+			rs = statement.executeQuery(sqlIdFeed);
+			rs.next();
+			int idFeed = rs.getInt("id");
+			try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+			
+			rs = statement.executeQuery(sqlIdFolder);
+			rs.next();
+			int idFolder = rs.getInt("id");
+			try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+			
+			String putInFolderSQL = String.format("INSERT INTO feeds_folders (id_folder, id_feed) VALUES ( %d, %d);", idFolder, idFeed );
+			ret = statement.executeUpdate( putInFolderSQL );
+		
+		} catch(SQLException e) {
+			e.printStackTrace();
+		
+		} finally {
+			try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+		    try { con.close(); } catch (SQLException e) { e.printStackTrace(); }
+		}
+		
+		return ret;
+	}
+	
+	public LinkedList<Feed> getFeedsFromFolder( String folder ) {
+		
+		Connection con = getConnection();
+		Statement statement = null;
+		ResultSet rs = null;
+		
+		ArrayList<Integer> feedsIds = new ArrayList<Integer>();
+		LinkedList<Feed> feedsList = new LinkedList<Feed>();
+		
+		try {
+			statement = con.createStatement();
+			String getFolderIdSQL = String.format("SELECT id FROM folders WHERE name = '%s';", folder);
+			rs = statement.executeQuery(getFolderIdSQL);
+			rs.next();
+			int idFolder = rs.getInt("id");
+			
+			String getFeedsFromFolderSQL = String.format("SELECT id_feed FROM feeds_folders WHERE id_folder = %d;", idFolder);
+			rs = statement.executeQuery(getFeedsFromFolderSQL);
+			
+			// Itera sobre todos ids de los feeds de una carpeta.
+			while( rs.next() ) {			
+				int idFeed = rs.getInt("id_feed");
+				feedsIds.add(idFeed);
+			}
+			
+			for( int i = 0; i < feedsIds.size(); i++ ) {
+				String getFeedSQL = String.format("SELECT name, url FROM feeds WHERE id = %d;" , feedsIds.get(i) );
+				rs = statement.executeQuery(getFeedSQL);
+				
+				rs.next();
+				Feed feed = new Feed( rs.getString("name"), rs.getString("url") );
+				feedsList.add(feed);
+			}
+		
+		} catch ( SQLException e ) {
+			e.printStackTrace();
+		} finally {
+			
+			try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+			try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+		    try { con.close(); } catch (SQLException e) { e.printStackTrace(); }
+		}
+		
+		return feedsList;
+	}
+
+	public ArrayList<Folder> getFolders() {
+		Connection con = getConnection();
+		Statement statement = null;
+		ResultSet rs = null;
+		ArrayList<Folder> folders = new ArrayList<Folder>();
+		
+		try {
+			statement = con.createStatement();
+			String getFoldersSQL = "SELECT id, name FROM folders;";
+			
+			rs = statement.executeQuery( getFoldersSQL );
+			
+			while( rs.next() ) {
+				String name = rs.getString("name");
+				Folder folder = new Folder( name );
+				folders.add(folder);
+			}
+			
+		} catch ( SQLException e ) {
+			e.printStackTrace();
+		} finally {
+			
+			try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+			try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+		    try { con.close(); } catch (SQLException e) { e.printStackTrace(); }
+		}
+		
+		return folders;
 	}
 	
 }
