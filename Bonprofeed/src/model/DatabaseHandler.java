@@ -626,5 +626,35 @@ public class DatabaseHandler {
 		
 		return feedsList;
 	}
+
+	public ArrayList<Folder> getFolders() {
+		Connection con = getConnection();
+		Statement statement = null;
+		ResultSet rs = null;
+		ArrayList<Folder> folders = new ArrayList<Folder>();
+		
+		try {
+			statement = con.createStatement();
+			String getFoldersSQL = "SELECT id, name FROM folders;";
+			
+			rs = statement.executeQuery( getFoldersSQL );
+			
+			while( rs.next() ) {
+				String name = rs.getString("name");
+				Folder folder = new Folder( name );
+				folders.add(folder);
+			}
+			
+		} catch ( SQLException e ) {
+			e.printStackTrace();
+		} finally {
+			
+			try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+			try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+		    try { con.close(); } catch (SQLException e) { e.printStackTrace(); }
+		}
+		
+		return folders;
+	}
 	
 }
