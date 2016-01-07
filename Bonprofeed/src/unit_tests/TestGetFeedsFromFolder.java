@@ -13,6 +13,7 @@ public class TestGetFeedsFromFolder {
 
 	@Test
 	public void get_Feeds_From_Folder() {
+		
 		DatabaseHandler dbh = new DatabaseHandler();
 		dbh.clearDatabase();
 		
