@@ -487,5 +487,25 @@ public class DatabaseHandler {
 		
 		return ret;
 	}
+
+	public int deleteTag(String name) {
+		int ret = 0;
+		Connection con = getConnection();
+		Statement statement = null;
+		
+		String sql = String.format( "DELETE FROM tags WHERE name = '%s';", name);
+		
+		try {
+			statement = con.createStatement();
+			ret = statement.executeUpdate(sql);
+		} catch(SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+		    try { con.close(); } catch (SQLException e) { e.printStackTrace(); }
+		}
+		
+		return ret;
+	}
 	
 }
