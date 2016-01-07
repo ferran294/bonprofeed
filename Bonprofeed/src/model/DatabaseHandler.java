@@ -645,11 +645,13 @@ public class DatabaseHandler {
 				folders.add(folder);
 			}
 			
+			try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+			
 		} catch ( SQLException e ) {
 			e.printStackTrace();
 		} finally {
 			
-			try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+			
 			try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
 		    try { con.close(); } catch (SQLException e) { e.printStackTrace(); }
 		}

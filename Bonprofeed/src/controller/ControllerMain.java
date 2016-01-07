@@ -1,6 +1,7 @@
 package controller;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 
@@ -18,8 +19,8 @@ public class ControllerMain implements Initializable{
 	private DatabaseHandler dbh;
 	private RomeOperations rome;
 	@FXML private TreeView<String> folderTree;
-	//private LinkedList<Folder> folders = controller.getFolders();
-	private LinkedList<Folder> folders = new LinkedList<Folder>();
+	
+	
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -30,9 +31,12 @@ public class ControllerMain implements Initializable{
 	
 	private void generateFolderTree(){
  		//TreeFolder
+		dbh = new DatabaseHandler();
  		TreeItem<String> rootNode = new TreeItem<String>("Todos los feeds");
+ 		ArrayList<Folder> folders = dbh.getFolders();
 		rootNode.setExpanded(true);
-		//folders.add(new Folder("prueba"));
+		
+		
 		
 		for (Folder folder : folders) {
             TreeItem<String> foldLeaf = new TreeItem<String>(folder.getName());
@@ -52,9 +56,7 @@ public class ControllerMain implements Initializable{
 	
 	
 	
-	public LinkedList<Folder> getFolders(){
-		return null;
-	}
+	
 	
 
 	
