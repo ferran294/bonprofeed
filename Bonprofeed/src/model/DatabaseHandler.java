@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+import model.Feed;
 
 public class DatabaseHandler {
 	
@@ -657,6 +658,34 @@ public class DatabaseHandler {
 		}
 		
 		return folders;
+	}
+
+	public ArrayList<Feed> getUnclassifiedFeeds() {
+		ArrayList<Feed> feeds = new ArrayList<Feed>();
+		Connection con = getConnection();
+		Statement statement = null;
+		ResultSet rs = null;
+		
+		try {
+			statement = con.createStatement();
+			String sql = "SELECT name, url FROM feeds WHERE id NOT IN ( SELECT id_feed FROM feeds_folders );";
+			rs = statement.executeQuery(sql);
+		
+			while( rs.next() ) {
+				Feed f = new Feed( rs.getString("name"), rs.getString("url") );
+				feeds.add(f);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			
+			try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+			try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+		    try { con.close(); } catch (SQLException e) { e.printStackTrace(); }
+		}
+		
+		return feeds;
 	}
 	
 }
