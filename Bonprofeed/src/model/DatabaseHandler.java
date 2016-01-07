@@ -618,6 +618,7 @@ public class DatabaseHandler {
 		} catch ( SQLException e ) {
 			e.printStackTrace();
 		} finally {
+			
 			try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
 			try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
 		    try { con.close(); } catch (SQLException e) { e.printStackTrace(); }

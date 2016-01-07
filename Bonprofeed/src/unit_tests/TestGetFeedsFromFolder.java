@@ -17,12 +17,14 @@ public class TestGetFeedsFromFolder {
 		dbh.clearDatabase();
 		
 		dbh.insertFeed( "http://krebsonsecurity.com/feed/", "Krebs On Security" );
+		dbh.insertFeed( "http://krebsonsecurity.com/", "Security" );
 		dbh.createFolder( "Blogs" );
 		dbh.putFeedIntoFolder("Krebs On Security", "Blogs");
+		dbh.putFeedIntoFolder("Security", "Blogs");
 		
 		LinkedList<Feed> feeds = dbh.getFeedsFromFolder( "Blogs" );
 		
-		assertEquals( 1, feeds.size() );
+		assertEquals( 2, feeds.size() );
 		
 	}
 
