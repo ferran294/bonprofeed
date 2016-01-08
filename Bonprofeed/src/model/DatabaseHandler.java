@@ -2,6 +2,7 @@ package model;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -757,6 +758,53 @@ public class DatabaseHandler {
 		}
 		
 		return tags;
+	}
+
+	public int insertArticle(String title, String content, String author, String link, String feed) {
+		int res = 0;
+		
+		Connection con = getConnection();
+		PreparedStatement statement = null;
+		ResultSet rs = null;
+		
+		try {
+			statement = con.prepareStatement("SELECT id FROM feeds WHERE name = ?;");
+			statement.setString( 1, feed);
+			rs = statement.executeQuery();
+			rs.next();
+			int source = rs.getInt("id");
+			
+			statement = con.prepareStatement( "INSERT INTO articles ( title, content, author, readen, link, source ) VALUES (?, ?, ?, 0, ?, ?)");
+			statement.setString(1, title);
+			statement.setString(2, content);
+			statement.setString(3, author);
+			statement.setString(4, link);
+			statement.setInt(5, source);
+			
+			res = statement.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return res;
+	}
+
+	public int markAsRead( String title ) {
+		int res = 0;
+		Connection con = getConnection();
+		Statement sta = null;
+		
+		try {
+			sta = con.createStatement();
+			String sql = String.format("UPDATE articles SET readen = 1 WHERE title = '%s';", title);
+			res = sta.executeUpdate( sql );
+			
+		} catch ( SQLException e ) {
+			
+		}
+		
+		return res;
 	}
 	
 }
