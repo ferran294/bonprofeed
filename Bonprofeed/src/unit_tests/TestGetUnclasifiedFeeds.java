@@ -29,7 +29,7 @@ public class TestGetUnclasifiedFeeds {
 	@Test
 	public void get_Unclasified_Feeds_All_Unclassified() {
 		
-		dbh.insertFeed("url", "name");
+		dbh.insertFeed("https://www.google.es", "name");
 		dbh.insertFeed("urlFeed", "name2");
 		
 		ArrayList<Feed> feeds = dbh.getUnclassifiedFeeds();
