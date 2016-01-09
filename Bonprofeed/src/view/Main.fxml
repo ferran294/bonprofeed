@@ -9,8 +9,34 @@
 <AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="controller.ControllerMain">
   <!-- TODO Add Nodes -->
   <children>
-    <ListView fx:id="articlesList" editable="true" prefHeight="700.0" prefWidth="1000.0" visible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-    <TreeView fx:id="folderTree" layoutX="0.0" layoutY="118.0" prefHeight="682.0" prefWidth="256.0" />
+    <AnchorPane fx:id="panelArticles" layoutX="256.0" layoutY="118.0" prefHeight="680.0" prefWidth="955.0">
+      <children>
+        <ListView fx:id="articlesList" editable="true" prefHeight="382.0" prefWidth="450.0" visible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      </children>
+    </AnchorPane>
     <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="118.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1211.0" />
+    <Button id="btnAnadirFeed" fx:id="btnAddFeed" alignment="CENTER" cancelButton="false" defaultButton="false" focusTraversable="true" layoutX="53.0" layoutY="36.0" mnemonicParsing="false" onAction="#newFeed" prefHeight="47.0" prefWidth="119.0" styleClass="null" text="Añadir Feed" textFill="BLACK" underline="false" visible="true" wrapText="false" />
+    <TabPane layoutX="0.0" layoutY="118.0" prefHeight="680.0" prefWidth="256.0" tabClosingPolicy="UNAVAILABLE">
+      <tabs>
+        <Tab text="Carpetas">
+          <content>
+            <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+              <children>
+                <TreeView fx:id="folderTree" prefHeight="644.0" prefWidth="256.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+              </children>
+            </AnchorPane>
+          </content>
+        </Tab>
+        <Tab text="Etiquetas">
+          <content>
+            <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+              <children>
+                <TreeView id="folderTree" fx:id="tagTree" prefHeight="644.0" prefWidth="256.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+              </children>
+            </AnchorPane>
+          </content>
+        </Tab>
+      </tabs>
+    </TabPane>
   </children>
 </AnchorPane>

@@ -37,14 +37,18 @@ public class ControllerNewFeed implements Initializable{
 	public void addFeed(ActionEvent event){
 		dbh = new DatabaseHandler();
 		rome = new RomeOperations();
-		
 		String url = textUrl.getText();
 		boolean isFeed = rome.isFeed(url);
 		
 		if(isFeed){
 			String feedName = rome.getFeedName(url);
-			dbh.insertFeed(url, feedName);
-			errorFeedLabel.setText("Correcto");
+			int repeated = dbh.insertFeed(url, feedName);
+			if(repeated == 0){
+				errorFeedLabel.setText("El Feed ya existe en tu coleccion");
+			}else{
+				errorFeedLabel.setText("Correcto");
+			}
+			
 			
 		}else{
 			errorFeedLabel.setText("Feed incorrecto");

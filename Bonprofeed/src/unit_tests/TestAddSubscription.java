@@ -14,21 +14,17 @@ public class TestAddSubscription {
 	private static RomeOperations ro;
 	
 	@BeforeClass
-	public static void insertSubscription() {
+	public static void createRO() {
+		dbh = new DatabaseHandler();
+	
+		dbh.initialize();
+		dbh.clearDatabase();
+		
 		String url = "http://feeds.feedburner.com/ElLadoDelMal";
 		String name = "Un informático en el lado del mal";
 		
 		dbh.insertFeed(url, name);
-	}
-	
-	@BeforeClass
-	public static void clearDatabase() {	
-		dbh = new DatabaseHandler();
-		dbh.clearDatabase();
-	}
-	
-	@BeforeClass
-	public static void createRO() {
+		
 		ro = new RomeOperations();
 	}
 	

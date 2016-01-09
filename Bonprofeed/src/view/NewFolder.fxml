@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+  <!-- TODO Add Nodes -->
+  <children>
+    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="133.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="600.0" />
+    <Label layoutX="29.0" layoutY="66.0" prefWidth="258.0" text="Nueva carpeta" textFill="WHITE">
+      <font>
+        <Font size="33.0" />
+      </font>
+    </Label>
+    <Label layoutX="74.0" layoutY="222.0" text="Crea una nueva carpeta:" />
+    <TextField fx:id="textNewFolder" layoutX="272.0" layoutY="215.0" prefHeight="29.0" prefWidth="250.0" promptText="Introduce el nombre de la carpeta" />
+    <Button fx:id="btnNewFolder" layoutX="271.0" layoutY="280.0" mnemonicParsing="false" onAction="#createFolder" prefHeight="29.0" text="Crear" />
+    <Label fx:id="errorNewFolder" layoutX="282.0" layoutY="339.0" text="" textFill="#cc0000">
+      <font>
+        <Font size="15.0" />
+      </font>
+    </Label>
+  </children>
+</AnchorPane>
