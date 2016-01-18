@@ -2,6 +2,7 @@ package model;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -19,14 +20,15 @@ public class DatabaseHandler {
 	
 	public int createTag( String name ) {
 		Connection conn = getConnection();
-		Statement statement = null;
+		PreparedStatement statement = null;
 		int ret = 0;
 		
-		String sql = String.format("INSERT INTO tags ( name ) VALUES ( '%s' );", name );
+		String sql = "INSERT INTO tags ( name ) VALUES ( ? );";
 		
 		try {
-			statement = conn.createStatement();
-			ret = statement.executeUpdate(sql);
+			statement = conn.prepareStatement( sql );
+			statement.setString(1, name);
+			ret = statement.executeUpdate();
 		
 		} catch ( MySQLIntegrityConstraintViolationException e ) {
 			
@@ -46,13 +48,15 @@ public class DatabaseHandler {
 	public int deleteFolder( String name ) {
 		int ret = 0;
 		Connection con = getConnection();
-		Statement statement = null;
+		PreparedStatement statement = null;
 		
-		String sql = String.format( "DELETE FROM folders WHERE name = '%s';", name);
+		String sql = "DELETE FROM folders WHERE name = ?;";
 		
 		try {
-			statement = con.createStatement();
-			ret = statement.executeUpdate(sql);
+			statement = con.prepareStatement( sql );
+			statement.setString(1, name);
+			ret = statement.executeUpdate();
+		
 		} catch(SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -64,15 +68,18 @@ public class DatabaseHandler {
 	}
 	
 	public int renameFolder( String oldName, String newName ) {
+		
 		Connection con = getConnection();
-		Statement sta = null;
+		PreparedStatement sta = null;
 		int ret = 0;
 		
-		String sql = String.format( "UPDATE folders SET name = '%s' WHERE name = '%s';", newName, oldName );
+		String sql = "UPDATE folders SET name = ? WHERE name = ?;";
 		
 		try {
-			sta = con.createStatement();
-			ret = sta.executeUpdate( sql );
+			sta = con.prepareStatement( sql );
+			sta.setString(1, newName);
+			sta.setString(2, oldName);
+			ret = sta.executeUpdate( );
 		} catch( MySQLIntegrityConstraintViolationException e ) {
 			System.out.println("ERROR: Ya existe una carpeta con el mismo nombre.");
 		} catch ( SQLException e) {
@@ -88,14 +95,16 @@ public class DatabaseHandler {
 	
 	public int createFolder(String name){
 		Connection conn = getConnection();
-		Statement statement = null;
+		PreparedStatement statement = null;
 		int ret = 0;
 		
-		String sql = String.format("INSERT INTO folders ( name ) VALUES ( '%s' );", name );
+		String sql = "INSERT INTO folders ( name ) VALUES ( ? );";
 		
 		try {
-			statement = conn.createStatement();
-			ret = statement.executeUpdate(sql);
+			
+			statement = conn.prepareStatement( sql );
+			statement.setString(1, name);
+			ret = statement.executeUpdate();
 		
 		} catch ( MySQLIntegrityConstraintViolationException e ) {
 			
@@ -109,36 +118,6 @@ public class DatabaseHandler {
 		}
 		
 		return ret;
-	}
-	
-	//Set nombre de carpeta (Update y devuelve true si el nombre no existe,si existe devuelve false)
-	public boolean setFolderName(int id,String name){
-		
-		Connection con = getConnection();
-		Statement statement = null;
-		ResultSet rs = null;
-		
-		String queryFolderSql = String.format("SELECT id FROM folders WHERE name = %s;",name);
-		
-		try {
-			statement = con.createStatement();
-			rs = statement.executeQuery(queryFolderSql);
-	
-			if (!rs.isBeforeFirst() ) {    //No existe
-				String updateFolderSql = String.format("UPDATE folders SET name = %s WHERE id = %d;",name,id);
-				statement.executeUpdate(updateFolderSql);
-				return true;
-			}
-		} catch ( SQLException e ) {
-			
-			e.printStackTrace();
-		
-		} finally {
-			
-		    try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
-		}
-		
-		return false;
 	}
 	
 	public void initialize() {
@@ -383,14 +362,17 @@ public class DatabaseHandler {
 	public int insertFeed(String url, String name) {
 		
 		Connection conn = getConnection();
-		Statement statement = null;
+		PreparedStatement statement = null;
 		int ret = 0;
 		
-		String sql = String.format("INSERT INTO feeds ( name, url ) VALUES ( '%s', '%s' );", name, url );
+		String sql =  "INSERT INTO feeds ( name, url ) VALUES ( ?, ? );";
 		
 		try {
-			statement = conn.createStatement();
-			ret = statement.executeUpdate(sql);
+			
+			statement = conn.prepareStatement( sql );
+			statement.setString(1, name);
+			statement.setString(2, url);
+			ret = statement.executeUpdate();
 		
 		} catch ( MySQLIntegrityConstraintViolationException e ) {
 			
@@ -408,14 +390,17 @@ public class DatabaseHandler {
 	
 	public int deleteFeed(String name) {
 		Connection con = getConnection();
-		Statement statement = null;
+		PreparedStatement statement = null;
 		int ret = 0;
 		
-		String sql = String.format( "DELETE FROM feeds WHERE name = '%s';", name);
+		String sql = "DELETE FROM feeds WHERE name = ?;";
 		
 		try {
-			statement = con.createStatement();
-			ret = statement.executeUpdate(sql);
+			
+			statement = con.prepareStatement(sql);
+			statement.setString(1, name);
+			ret = statement.executeUpdate();
+		
 		} catch(SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -453,22 +438,27 @@ public class DatabaseHandler {
 	public int asignTag(String feed, String tag) {
 		
 		Connection con = getConnection();
-		Statement statement = null;
+		PreparedStatement statement = null;
 		ResultSet rs = null;
 		int ret = 0;
 		
-		String sqlIdFeed = String.format( "SELECT id FROM feeds WHERE name = '%s';", feed);
-		String sqlIdTag = String.format( "SELECT id FROM tags WHERE name = '%s';", tag );
+		String sqlIdFeed = "SELECT id FROM feeds WHERE name = ?;";
+		String sqlIdTag = "SELECT id FROM tags WHERE name = ?;";
 		
 		try {
-			statement = con.createStatement();
-			
-			rs = statement.executeQuery(sqlIdFeed);
+			statement = con.prepareStatement( sqlIdFeed );
+			statement.setString(1, feed);
+			rs = statement.executeQuery();
 			rs.next();
 			int idFeed = rs.getInt("id");
-			try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
 			
-			rs = statement.executeQuery(sqlIdTag);
+			try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+			try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+			
+			statement = con.prepareStatement(sqlIdTag);
+			statement.setString(1, tag);
+			
+			rs = statement.executeQuery();
 			rs.next();
 			int idTag = rs.getInt("id");
 			try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
@@ -493,13 +483,15 @@ public class DatabaseHandler {
 	public int deleteTag(String name) {
 		int ret = 0;
 		Connection con = getConnection();
-		Statement statement = null;
+		PreparedStatement statement = null;
 		
-		String sql = String.format( "DELETE FROM tags WHERE name = '%s';", name);
+		String sql = "DELETE FROM tags WHERE name = ?;";
 		
 		try {
-			statement = con.createStatement();
-			ret = statement.executeUpdate(sql);
+			statement = con.prepareStatement( sql );
+			statement.setString(1, name);
+			ret = statement.executeUpdate();
+			
 		} catch(SQLException e) {
 			e.printStackTrace();
 		} finally {
@@ -512,23 +504,28 @@ public class DatabaseHandler {
 
 	public int deallocateTag(String feed, String tag) {
 		Connection con = getConnection();
-		Statement statement = null;
+		PreparedStatement statement = null;
 		ResultSet rs = null;
 		int ret = 0;
 		
-		String sqlIdFeed = String.format( "SELECT id FROM feeds WHERE name = '%s';", feed);
-		String sqlIdTag = String.format( "SELECT id FROM tags WHERE name = '%s';", tag );
+		String sqlIdFeed = "SELECT id FROM feeds WHERE name = ?;";
+		String sqlIdTag = "SELECT id FROM tags WHERE name = ?;";
 		
 		try {
-			statement = con.createStatement();
-			
-			rs = statement.executeQuery(sqlIdFeed);
+			statement = con.prepareStatement( sqlIdFeed );
+			statement.setString(1, feed);
+			rs = statement.executeQuery();
 			rs.next();
 			int idFeed = rs.getInt("id");
-			try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
 			
-			rs = statement.executeQuery(sqlIdTag);
+			try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+			try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+			
+			statement = con.prepareStatement(sqlIdTag);
+			statement.setString(1, tag);	
+			rs = statement.executeQuery();
 			rs.next();
+			
 			int idTag = rs.getInt("id");
 			try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
 			
@@ -548,22 +545,28 @@ public class DatabaseHandler {
 
 	public int putFeedIntoFolder(String feed, String folder) {
 		Connection con = getConnection();
-		Statement statement = null;
+		PreparedStatement statement = null;
 		ResultSet rs = null;
 		int ret = 0;
 		
-		String sqlIdFeed = String.format( "SELECT id FROM feeds WHERE name = '%s';", feed);
-		String sqlIdFolder = String.format( "SELECT id FROM folders WHERE name = '%s';", folder );
+		
+		String sqlIdFeed = "SELECT id FROM feeds WHERE name = ?;";
+		String sqlIdFolder = "SELECT id FROM folders WHERE name = ?;";
 		
 		try {
-			statement = con.createStatement();
-			
-			rs = statement.executeQuery(sqlIdFeed);
+			statement = con.prepareStatement(sqlIdFeed);
+			statement.setString(1, feed);
+			rs = statement.executeQuery();
 			rs.next();
 			int idFeed = rs.getInt("id");
-			try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
 			
-			rs = statement.executeQuery(sqlIdFolder);
+			try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+			try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+			
+			statement = con.prepareStatement(sqlIdFolder);
+			statement.setString(1, folder);
+			
+			rs = statement.executeQuery();
 			rs.next();
 			int idFolder = rs.getInt("id");
 			try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
@@ -585,20 +588,26 @@ public class DatabaseHandler {
 	public LinkedList<Feed> getFeedsFromFolder( String folder ) {
 		
 		Connection con = getConnection();
-		Statement statement = null;
+		PreparedStatement statement = null;
 		ResultSet rs = null;
 		
 		ArrayList<Integer> feedsIds = new ArrayList<Integer>();
 		LinkedList<Feed> feedsList = new LinkedList<Feed>();
 		
 		try {
-			statement = con.createStatement();
-			String getFolderIdSQL = String.format("SELECT id FROM folders WHERE name = '%s';", folder);
-			rs = statement.executeQuery(getFolderIdSQL);
+			
+			String getFolderIdSQL = "SELECT id FROM folders WHERE name = ?;";
+			statement = con.prepareStatement( getFolderIdSQL );
+			statement.setString(1, folder );
+			rs = statement.executeQuery();
 			rs.next();
+			
 			int idFolder = rs.getInt("id");
 			
 			String getFeedsFromFolderSQL = String.format("SELECT id_feed FROM feeds_folders WHERE id_folder = %d;", idFolder);
+			
+			try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+			
 			rs = statement.executeQuery(getFeedsFromFolderSQL);
 			
 			// Itera sobre todos ids de los feeds de una carpeta.
@@ -648,13 +657,12 @@ public class DatabaseHandler {
 			
 			try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
 			
-		} catch ( SQLException e ) {
-			e.printStackTrace();
-		} finally {
-			
 			
 			try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
 		    try { con.close(); } catch (SQLException e) { e.printStackTrace(); }
+			
+		} catch ( SQLException e ) {
+			e.printStackTrace();
 		}
 		
 		return folders;
@@ -676,16 +684,143 @@ public class DatabaseHandler {
 				feeds.add(f);
 			}
 			
+			try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+			try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+		    try { con.close(); } catch (SQLException e) { e.printStackTrace(); }
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
-		} finally {
+		}
+		
+		return feeds;
+	}
+	
+	public ArrayList<Feed> getTaggedFeeds( String tag ) {
+		Connection con = getConnection();
+		PreparedStatement statement = null;
+		ResultSet rs = null;
+		
+		ArrayList<Integer> feedsIds = new ArrayList<Integer>();
+		ArrayList<Feed> feedsList = new ArrayList<Feed>();
+		
+		try {
 			
+			String getTagIdSQL = "SELECT id FROM tags WHERE name = ?;";
+			statement = con.prepareStatement(getTagIdSQL);
+			statement.setString(1, tag);
+		
+			rs = statement.executeQuery();
+			rs.next();
+			int idTag = rs.getInt("id");
+			
+			String getFeedsFromTagSQL = String.format("SELECT id_feed FROM feeds_tags WHERE id_tag = %d;", idTag);
+			rs = statement.executeQuery(getFeedsFromTagSQL);
+			
+			// Itera sobre todos ids de los feeds de una carpeta.
+			while( rs.next() ) {			
+				int idFeed = rs.getInt("id_feed");
+				feedsIds.add(idFeed);
+			}
+			
+			for( int i = 0; i < feedsIds.size(); i++ ) {
+				String getFeedSQL = String.format("SELECT name, url FROM feeds WHERE id = %d;" , feedsIds.get(i) );
+				rs = statement.executeQuery(getFeedSQL);
+				
+				rs.next();
+				Feed feed = new Feed( rs.getString("name"), rs.getString("url") );
+				feedsList.add(feed);
+			}
+			
+			
+		
+		} catch ( SQLException e ) {
+			e.printStackTrace();
+		} finally {
 			try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
 			try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
 		    try { con.close(); } catch (SQLException e) { e.printStackTrace(); }
 		}
+			
+		return feedsList;
 		
-		return feeds;
+	}
+	
+	public ArrayList<Tag> getTags() {
+		ArrayList<Tag> tags = new ArrayList<Tag>();
+		
+		Connection con = getConnection();
+		Statement statement = null;
+		ResultSet rs = null;
+		
+		try {
+			statement = con.createStatement();
+			String getTagsSQL = "SELECT id, name FROM tags;";
+			
+			rs = statement.executeQuery( getTagsSQL );
+			
+			while( rs.next() ) {
+				String name = rs.getString("name");
+				Tag tag = new Tag( name );
+				tags.add(tag);
+			}
+			
+			try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+			try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+		    try { con.close(); } catch (SQLException e) { e.printStackTrace(); }
+			
+		} catch ( SQLException e ) {
+			e.printStackTrace();
+		}
+		
+		return tags;
+	}
+
+	public int insertArticle(String title, String content, String author, String link, String feed) {
+		int res = 0;
+		
+		Connection con = getConnection();
+		PreparedStatement statement = null;
+		ResultSet rs = null;
+		
+		try {
+			statement = con.prepareStatement("SELECT id FROM feeds WHERE name = ?;");
+			statement.setString( 1, feed);
+			rs = statement.executeQuery();
+			rs.next();
+			int source = rs.getInt("id");
+			
+			statement = con.prepareStatement( "INSERT INTO articles ( title, content, author, readen, link, source ) VALUES (?, ?, ?, 0, ?, ?)");
+			statement.setString(1, title);
+			statement.setString(2, content);
+			statement.setString(3, author);
+			statement.setString(4, link);
+			statement.setInt(5, source);
+			
+			res = statement.executeUpdate();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return res;
+	}
+
+	public int markAsRead( String title ) {
+		int res = 0;
+		Connection con = getConnection();
+		PreparedStatement sta = null;
+		
+		try {
+			String sql = "UPDATE articles SET readen = 1 WHERE title = ?;";
+			sta = con.prepareStatement( sql );
+			sta.setString(1, title );
+			res = sta.executeUpdate();
+			
+		} catch ( SQLException e ) {
+			
+		}
+		
+		return res;
 	}
 	
 }
