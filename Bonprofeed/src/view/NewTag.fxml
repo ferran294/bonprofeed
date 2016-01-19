@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="controller.ControllerMain">
+  <!-- TODO Add Nodes -->
+  <children>
+    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="133.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="600.0" />
+    <Label layoutX="31.0" layoutY="67.0" prefHeight="33.0" prefWidth="350.0" text="Añadir una nueva etiqueta" textFill="WHITE">
+      <font>
+        <Font size="23.0" />
+      </font>
+    </Label>
+    <TextField id="textUrl" fx:id="textNewTag" layoutX="267.0" layoutY="176.0" prefHeight="33.0" prefWidth="289.0" promptText="Escribe aqui" text="" />
+    <Label layoutX="14.0" layoutY="184.0" prefWidth="233.0" text="Introduce el nombre de la etiqueta:" />
+    <Button id="btnAceptar" fx:id="btnNewTag" layoutX="246.0" layoutY="248.0" mnemonicParsing="false" onAction="#addTag" prefHeight="33.0" prefWidth="109.0" text="Aceptar" />
+    <Label id="errorFeedLabel" fx:id="textErrorTag" alignment="CENTER" focusTraversable="false" layoutX="77.0" layoutY="312.0" opacity="1.0" prefHeight="33.0" prefWidth="445.0" text="" textAlignment="CENTER" textFill="#cc0000" visible="true" wrapText="false">
+      <font>
+        <Font name="System Bold" size="14.0" />
+      </font>
+    </Label>
+    <Button fx:id="btnBack" layoutX="498.0" layoutY="71.0" mnemonicParsing="false" onAction="#backFromFolder" prefHeight="26.0" prefWidth="75.0" text="Volver" />
+  </children>
+</AnchorPane>
