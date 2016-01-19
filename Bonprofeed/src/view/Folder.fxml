@@ -22,5 +22,6 @@
     <Button fx:id="btnSetFolderName" layoutX="323.0" layoutY="116.0" mnemonicParsing="false" onAction="#setFolderName" text="Cambiar" />
     <Label fx:id="errorFolder" layoutX="409.0" layoutY="118.0" prefWidth="219.0" text="" textFill="RED" />
     <Button fx:id="btnDeleteFolder" layoutX="639.0" layoutY="116.0" mnemonicParsing="false" onAction="#deleteFolder" text="Eliminar Carpeta" />
+    <Button fx:id="btnBack" layoutX="685.0" layoutY="42.0" mnemonicParsing="false" onAction="#backFromFolder" prefHeight="28.0" prefWidth="72.0" text="Volver" />
   </children>
 </AnchorPane>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="controller.ControllerMain">
+  <!-- TODO Add Nodes -->
+  <children>
+    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="104.0" layoutX="1.0" layoutY="1.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="800.0" />
+    <Label id="labelFolderName" fx:id="labelTagName" layoutX="38.0" layoutY="31.0" prefHeight="44.0" prefWidth="657.0" text="Label" textFill="WHITE">
+      <font>
+        <Font size="25.0" />
+      </font>
+    </Label>
+    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#0083cc" height="44.0" layoutX="1.0" layoutY="105.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="800.0" />
+    <Label layoutX="8.0" layoutY="119.0" prefWidth="115.0" text="Cambiar nombre:" textFill="WHITE" />
+    <TextField id="newName" fx:id="textNewTag" layoutX="135.0" layoutY="116.0" prefWidth="180.0" promptText="Escribe el nuevo nombre" />
+    <Button id="btnSetFolderName" fx:id="btnSetTagName" layoutX="324.0" layoutY="117.0" mnemonicParsing="false" onAction="#setTagName" text="Cambiar" />
+    <Label id="errorFolder" layoutX="410.0" layoutY="119.0" prefWidth="219.0" text="" textFill="RED" />
+    <Button id="btnDeleteFolder" fx:id="btnDeleteTag" layoutX="640.0" layoutY="117.0" mnemonicParsing="false" onAction="#deleteTag" text="Eliminar Etiqueta" />
+    <Button fx:id="btnBack" layoutX="686.0" layoutY="43.0" mnemonicParsing="false" onAction="#backFromFolder" prefHeight="28.0" prefWidth="72.0" text="Volver" />
+  </children>
+</AnchorPane>

@@ -24,5 +24,6 @@
         <Font name="System Bold" size="14.0" />
       </font>
     </Label>
+    <Button fx:id="btnBack" layoutX="503.0" layoutY="89.0" mnemonicParsing="false" onAction="#backMain" prefHeight="26.0" prefWidth="75.0" text="Volver" />
   </children>
 </AnchorPane>

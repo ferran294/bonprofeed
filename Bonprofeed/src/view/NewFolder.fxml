@@ -7,7 +7,7 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="controller.ControllerMain">
   <!-- TODO Add Nodes -->
   <children>
     <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="133.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="600.0" />
@@ -24,5 +24,6 @@
         <Font size="15.0" />
       </font>
     </Label>
+    <Button fx:id="btnBack" cancelButton="false" defaultButton="false" layoutX="496.0" layoutY="76.0" mnemonicParsing="false" onAction="#backFromFolder" prefHeight="29.0" prefWidth="68.0" text="Volver" textFill="BLACK" textOverrun="ELLIPSIS" wrapText="false" />
   </children>
 </AnchorPane>

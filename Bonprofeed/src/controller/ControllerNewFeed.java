@@ -1,15 +1,21 @@
 package controller;
 
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import model.DatabaseHandler;
 import model.RomeOperations;
 
@@ -17,6 +23,7 @@ public class ControllerNewFeed implements Initializable{
 	//Declare variables
 	private DatabaseHandler dbh;
 	private RomeOperations rome;
+	private WindowLoader windowLoader = new WindowLoader();
 	
 	@FXML
 	private TextField textUrl;
@@ -47,13 +54,23 @@ public class ControllerNewFeed implements Initializable{
 				errorFeedLabel.setText("El Feed ya existe en tu coleccion");
 			}else{
 				errorFeedLabel.setText("Correcto");
+				loadMain(errorFeedLabel);
 			}
+			
 			
 			
 		}else{
 			errorFeedLabel.setText("Feed incorrecto");
 		}
 	
+	}
+	
+	public void backMain(){
+		loadMain(btnAceptar);
+	}
+	
+	public void loadMain(Node element){
+		windowLoader.loadMain(element);
 	}
 	
 
