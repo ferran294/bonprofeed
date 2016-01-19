@@ -1,5 +1,7 @@
 package model;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -7,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
@@ -817,10 +820,46 @@ public class DatabaseHandler {
 			res = sta.executeUpdate();
 			
 		} catch ( SQLException e ) {
-			
+			e.printStackTrace();
 		}
 		
 		return res;
+	}
+
+	public ArrayList<Article> getAllArticles() {
+		ArrayList<Article> articles = new ArrayList<Article>();
+		Connection con = getConnection();
+		PreparedStatement sta = null;
+		ResultSet rs = null;
+		
+		
+		try {
+			String sql = "SELECT * FROM articles ORDER BY date DESC;";
+			sta = con.prepareStatement(sql);
+			rs = sta.executeQuery();
+			
+			while( rs.next() ) {
+				String title = rs.getString("title");
+				String author = rs.getString("author");
+				String content = rs.getString("content");
+				Date date = rs.getDate("date");
+				int readen = rs.getInt("readen");
+				URL url = new URL( rs.getString("link") );
+				
+				articles.add( new Article( title, author, content, url, readen, date ) );
+			}
+			
+			try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+			try { sta.close(); } catch (SQLException e) { e.printStackTrace(); }
+		    try { con.close(); } catch (SQLException e) { e.printStackTrace(); }
+			
+		} catch (SQLException e ){
+			e.printStackTrace();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		
+		return articles;
 	}
 	
 }
