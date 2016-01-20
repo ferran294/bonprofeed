@@ -2,11 +2,16 @@ package controller;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -26,7 +31,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
@@ -37,6 +44,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import model.Article;
@@ -52,6 +60,7 @@ public class ControllerMain implements Initializable{
 	private RomeOperations rome;
 	private WindowLoader windowLoader = new WindowLoader();
 	private static Folder actualFolder;
+	private static Article actualArticle;
 	private static Tag actualTag;
 	ArrayList<Folder> folders = dbh.getFolders();
 	@FXML TreeView<String> folderTree;
@@ -59,11 +68,13 @@ public class ControllerMain implements Initializable{
 	@FXML
 	private TableView<Article> articlesList;
 	@FXML
+	private TableColumn<Article, Integer> columnVisto;
+	@FXML
 	private TableColumn<Article, String> columnTitle;
 	@FXML
 	private TableColumn<Article, String> columnAuthor;
 	@FXML
-	private TableColumn<Article, String> columnDate;
+	private TableColumn<Article, Date> columnDate;
 	@FXML private AnchorPane panelArticles;
 	//Folder view
 	@FXML
@@ -95,6 +106,13 @@ public class ControllerMain implements Initializable{
 	//Tag
 	@FXML
 	private Label labelTagName;
+	//Article
+	@FXML
+	private Label textTitle;
+	@FXML
+	private Label textAuthor;
+	@FXML
+	private Label textDate;
 	
 	public ControllerMain(){
 		super();
@@ -105,16 +123,29 @@ public class ControllerMain implements Initializable{
 		String actualView = windowLoader.getActualView();
 		
 		if(actualView == "folder"){
+			
 			labelFolderName.setText(actualFolder.getName());
+		
 		}else if (actualView == "newFolder"){
 			
 		}else if(actualView == "newTag"){
 			
 		}else if(actualView == "tag"){
+			
 			labelTagName.setText(actualTag.getName());
+		
+		}else if(actualView == "article"){
+		
+			textTitle.setText(actualArticle.getTitle());
+			textAuthor.setText(actualArticle.getAuthor());
+			textDate.setText(actualArticle.getDate().toString());
+		
 		}else{
+		
 			generateFolderTree();
 			generateTagTree();
+			generateArticleList();
+		
 		}
 			
 		
@@ -126,10 +157,69 @@ public class ControllerMain implements Initializable{
 		ObservableList<Article> articles = FXCollections.observableArrayList(dbh.getAllArticles());
 		
 		// Initialize the columns.
-		columnTitle.setCellValueFactory(cellData -> cellData.getValue().getTitle());
-		columnAuthor.setCellValueFactory(cellData -> cellData.getValue().getAuthor());
-		columnDate.setCellValueFactory(cellData -> cellData.getValue().getDate());
+		columnTitle.setCellValueFactory(cellData -> cellData.getValue().getTitleProperty());
+		columnAuthor.setCellValueFactory(cellData -> cellData.getValue().getAuthorProperty());
+		columnDate.setCellValueFactory(cellData -> cellData.getValue().getDateProperty());
+		columnVisto.setCellValueFactory(cellData -> cellData.getValue().getReadenProperty());
 		
+		columnDate.setCellFactory(column -> {
+			return new TableCell<Article, Date>() {
+				@Override
+				protected void updateItem(Date item, boolean empty) {
+					super.updateItem(item, empty);
+					
+					if (item == null || empty) {
+						setText(null);
+						setStyle("");
+					} else {
+						// Format date.
+						setText(item.toString());
+						
+					}
+				}
+			};
+		});
+		
+		columnVisto.setCellFactory(column -> {
+			return new TableCell<Article, Integer>() {
+				@Override
+				protected void updateItem(Integer item, boolean empty) {
+					super.updateItem(item, empty);
+					
+					if (item == null || empty) {
+						setText(null);
+						setStyle("");
+					} else {
+						// Format date.
+						if(item == 0){
+							setText("No Visto");
+							setStyle("-fx-background-color: red; -fx-text-fill: white;");
+						}else{
+							setText("Visto");
+							setStyle("-fx-background-color: green; -fx-text-fill: white;");
+						}
+						
+						
+					}
+				}
+			};
+		});
+		
+		
+		articlesList.setRowFactory( tv -> {
+		    TableRow<Article> row = new TableRow<>();
+		    row.setOnMouseClicked(event -> {
+		        if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+		            Article rowArticle = row.getItem();
+		            actualArticle= rowArticle;
+		            windowLoader.loadArticle(rowArticle,row);
+		            
+		        }
+		    });
+		    return row ;
+		});
+		
+		articlesList.setItems(articles);
 		
 	}
 	
@@ -397,4 +487,8 @@ public class ControllerMain implements Initializable{
 		dbh.deleteTag(tagName);
 		windowLoader.loadMain(labelTagName);
 	}
+	
+	//------ Article controller --------
+	
+	
 }

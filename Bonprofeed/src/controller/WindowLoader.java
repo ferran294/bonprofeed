@@ -10,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TreeItem;
 import javafx.stage.Stage;
+import model.Article;
 import model.Folder;
 import model.Tag;
 
@@ -169,5 +170,26 @@ public class WindowLoader {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void loadArticle(Article article,Node element) {
+		Stage stage;
+		Parent root;
+		
+		
+		try {
+			setActualView("article");
+			stage = (Stage) element.getScene().getWindow();
+			root = FXMLLoader.load(getClass().getResource("/view/Article.fxml"));
+			Scene scene = new Scene(root);
+			stage.setTitle(article.getTitle());
+		    stage.setScene(scene);
+		    stage.show();
+		    
+		    
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 }

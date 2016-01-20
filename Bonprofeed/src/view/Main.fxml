@@ -13,9 +13,10 @@
       <children>
         <TableView fx:id="articlesList" prefHeight="680.0" prefWidth="955.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
           <columns>
-            <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="616.0" resizable="true" sortable="false" text="Titulo" fx:id="columnTitle" />
+            <TableColumn editable="false" prefWidth="75.0" text="Visto" fx:id="columnVisto" />
+            <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="549.0" resizable="true" sortable="false" text="Titulo" fx:id="columnTitle" />
             <TableColumn maxWidth="5000.0" minWidth="10.0" prefWidth="184.0" text="Autor" fx:id="columnAuthor" />
-            <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="154.0" text="Fecha" fx:id="columnDate" />
+            <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="147.0" text="Fecha" fx:id="columnDate" />
           </columns>
         </TableView>
       </children>
