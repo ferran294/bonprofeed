@@ -625,9 +625,11 @@ public class DatabaseHandler {
 				String getFeedSQL = String.format("SELECT name, url FROM feeds WHERE id = %d;" , feedsIds.get(i) );
 				rs = statement.executeQuery(getFeedSQL);
 				
-				rs.next();
-				Feed feed = new Feed( rs.getString("name"), rs.getString("url") );
-				feedsList.add(feed);
+				if( rs.next() ) {
+					Feed feed = new Feed( rs.getString("name"), rs.getString("url") );
+					
+					feedsList.add(feed);
+				}
 			}
 		
 		} catch ( SQLException e ) {
@@ -721,7 +723,7 @@ public class DatabaseHandler {
 			String getFeedsFromTagSQL = String.format("SELECT id_feed FROM feeds_tags WHERE id_tag = %d;", idTag);
 			rs = statement.executeQuery(getFeedsFromTagSQL);
 			
-			// Itera sobre todos ids de los feeds de una carpeta.
+			// Itera sobre todos ids de los feeds de una etiquetas.
 			while( rs.next() ) {			
 				int idFeed = rs.getInt("id_feed");
 				feedsIds.add(idFeed);
@@ -731,21 +733,17 @@ public class DatabaseHandler {
 				String getFeedSQL = String.format("SELECT name, url FROM feeds WHERE id = %d;" , feedsIds.get(i) );
 				rs = statement.executeQuery(getFeedSQL);
 				
-				rs.next();
-				Feed feed = new Feed( rs.getString("name"), rs.getString("url") );
-				feedsList.add(feed);
+				if( rs.next() ) {
+					Feed feed = new Feed( rs.getString("name"), rs.getString("url") );
+					
+					feedsList.add(feed);
+				}
 			}
-			
-			
 		
 		} catch ( SQLException e ) {
 			e.printStackTrace();
-		} finally {
-			try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
-			try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
-		    try { con.close(); } catch (SQLException e) { e.printStackTrace(); }
-		}
-			
+		} 
+		
 		return feedsList;
 		
 	}
