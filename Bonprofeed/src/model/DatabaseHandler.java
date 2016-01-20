@@ -8,7 +8,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 
@@ -778,7 +780,7 @@ public class DatabaseHandler {
 		return tags;
 	}
 
-	public int insertArticle(String title, String content, String author, String link, String feed) {
+	public int insertArticle(String title, String content, String author, String link, String feed, Date date) {
 		int res = 0;
 		
 		Connection con = getConnection();
@@ -788,16 +790,18 @@ public class DatabaseHandler {
 		try {
 			statement = con.prepareStatement("SELECT id FROM feeds WHERE name = ?;");
 			statement.setString( 1, feed);
+			
 			rs = statement.executeQuery();
 			rs.next();
 			int source = rs.getInt("id");
 			
-			statement = con.prepareStatement( "INSERT INTO articles ( title, content, author, readen, link, source ) VALUES (?, ?, ?, 0, ?, ?)");
+			statement = con.prepareStatement( "INSERT INTO articles ( title, content, author, readen, link, source, date ) VALUES (?, ?, ?, 0, ?, ?, ?)");
 			statement.setString(1, title);
 			statement.setString(2, content);
 			statement.setString(3, author);
 			statement.setString(4, link);
 			statement.setInt(5, source);
+			statement.setTimestamp(6, new Timestamp(date.getTime()));
 			
 			res = statement.executeUpdate();
 			

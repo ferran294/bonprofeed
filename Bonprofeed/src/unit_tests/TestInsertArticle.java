@@ -2,6 +2,10 @@ package unit_tests;
 
 import static org.junit.Assert.*;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 import org.junit.Test;
 
 import model.DatabaseHandler;
@@ -10,6 +14,7 @@ public class TestInsertArticle {
 
 	@Test
 	public void add_Article() {
+		
 		DatabaseHandler dbh = new DatabaseHandler();
 		dbh.clearDatabase();
 		dbh.insertFeed( "url", "name");
@@ -20,7 +25,9 @@ public class TestInsertArticle {
 		String link = "boladas.es";
 		String feed = "name";
 		
-		int res = dbh.insertArticle( name, contenido, autor, link, feed );
+		Date date = new Date();
+		
+		int res = dbh.insertArticle( name, contenido, autor, link, feed, date );
 		
 		assertEquals( 1, res );	
 		
