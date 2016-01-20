@@ -98,6 +98,32 @@ public class DatabaseHandler {
 		return ret;
 	}
 	
+public int renameTag( String oldName, String newName ) {
+		
+		Connection con = getConnection();
+		PreparedStatement sta = null;
+		int ret = 0;
+		
+		String sql = "UPDATE tags SET name = ? WHERE name = ?;";
+		
+		try {
+			sta = con.prepareStatement( sql );
+			sta.setString(1, newName);
+			sta.setString(2, oldName);
+			ret = sta.executeUpdate( );
+		} catch( MySQLIntegrityConstraintViolationException e ) {
+			System.out.println("ERROR: Ya existe una carpeta con el mismo nombre.");
+		} catch ( SQLException e) {
+			e.printStackTrace();
+		
+		} finally {
+			try { sta.close(); } catch (SQLException e) { e.printStackTrace(); }
+		    try { con.close(); } catch (SQLException e) { e.printStackTrace(); }
+		}
+		
+		return ret;
+	}
+	
 	public int createFolder(String name){
 		Connection conn = getConnection();
 		PreparedStatement statement = null;
@@ -742,7 +768,13 @@ public class DatabaseHandler {
 		
 		} catch ( SQLException e ) {
 			e.printStackTrace();
-		} 
+		} finally {
+			
+			try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+			try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
+		    try { con.close(); } catch (SQLException e) { e.printStackTrace(); }
+		}
+		
 		
 		return feedsList;
 		
