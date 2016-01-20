@@ -3,11 +3,14 @@ package controller;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -36,6 +39,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import model.Article;
 import model.DatabaseHandler;
 import model.Feed;
 import model.Folder;
@@ -52,10 +56,14 @@ public class ControllerMain implements Initializable{
 	ArrayList<Folder> folders = dbh.getFolders();
 	@FXML TreeView<String> folderTree;
 	@FXML TreeView<String> tagTree;
-	//@FXML
-	//private TableView<Article> articlesList;
-	//@FXML
-	//private TableColumn<Article, String> columnTitle;
+	@FXML
+	private TableView<Article> articlesList;
+	@FXML
+	private TableColumn<Article, String> columnTitle;
+	@FXML
+	private TableColumn<Article, String> columnAuthor;
+	@FXML
+	private TableColumn<Article, String> columnDate;
 	@FXML private AnchorPane panelArticles;
 	//Folder view
 	@FXML
@@ -115,7 +123,14 @@ public class ControllerMain implements Initializable{
 	
 	public void generateArticleList(){
 		dbh = new DatabaseHandler();
-		//ArrayList<Article> articles = dbh.getArticles();
+		ObservableList<Article> articles = FXCollections.observableArrayList(dbh.getAllArticles());
+		
+		// Initialize the columns.
+		columnTitle.setCellValueFactory(cellData -> cellData.getValue().getTitle());
+		columnAuthor.setCellValueFactory(cellData -> cellData.getValue().getAuthor());
+		columnDate.setCellValueFactory(cellData -> cellData.getValue().getDate());
+		
+		
 	}
 	
 	public void generateFolderTree(){

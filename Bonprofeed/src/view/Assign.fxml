@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+  <!-- TODO Add Nodes -->
+  <children>
+    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="149.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="603.0" />
+    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#003d99" height="149.0" layoutX="600.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="603.0" />
+    <Line endX="19.0" endY="-81.0" layoutX="582.0" layoutY="231.0" startX="18.0" startY="571.0" />
+    <Label layoutX="27.0" layoutY="74.0" text="Asignar a etiqueta" textFill="WHITE">
+      <font>
+        <Font size="30.0" fx:id="x1" />
+      </font>
+    </Label>
+    <Label font="$x1" layoutX="650.0" layoutY="77.0" text="Asignar a carpeta" textFill="WHITE" />
+    <Label layoutX="56.0" layoutY="269.0" text="Escribe el nombre de la etiqueta al cual quieres asignar el Feed">
+      <font>
+        <Font size="15.0" fx:id="x2" />
+      </font>
+    </Label>
+    <Label font="$x2" layoutX="650.0" layoutY="269.0" text="Escribe el nombre de la carpeta al cual quieres asignar el Feed" />
+    <TextField id="textTagAsigned" fx:id="textTagAssigned" layoutX="56.0" layoutY="326.0" prefHeight="27.0" prefWidth="480.0" />
+    <TextField fx:id="textFolderAssigned" layoutX="650.0" layoutY="326.0" prefHeight="27.0" prefWidth="480.0" />
+    <Button fx:id="btnAssignTag" layoutX="243.0" layoutY="384.0" mnemonicParsing="false" onAction="#assignTag" prefHeight="35.0" prefWidth="106.0" text="Asignar" />
+    <Button id="btnAssignTag" fx:id="btnAssignFolder" layoutX="863.0" layoutY="384.0" mnemonicParsing="false" onAction="#assignFolder" prefHeight="35.0" prefWidth="106.0" text="Asignar" />
+    <Label fx:id="errorTagAssign" layoutX="48.0" layoutY="521.0" prefWidth="523.0" text="">
+      <font>
+        <Font size="20.0" fx:id="x3" />
+      </font>
+      <textFill>
+        <Color blue="0.000" green="0.000" red="0.800" fx:id="x4" />
+      </textFill>
+    </Label>
+    <Label id="errorTagAssign" fx:id="errorFolderAssign" font="$x3" layoutX="629.0" layoutY="516.0" prefWidth="523.0" text="" textFill="$x4" />
+  </children>
+</AnchorPane>
