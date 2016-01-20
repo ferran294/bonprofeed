@@ -865,5 +865,46 @@ public class DatabaseHandler {
 		
 		return articles;
 	}
+
+	public ArrayList<Article> getArticlesFromFeed(String string) {
+		ArrayList<Article> articles = new ArrayList<Article>();
+		
+		Connection con = getConnection();
+		PreparedStatement statement = null;
+		ResultSet rs = null;
+		
+		try {
+			statement = con.prepareStatement("SELECT id FROM feeds WHERE name = ?;");
+			statement.setString( 1, string );
+			
+			rs = statement.executeQuery();
+			rs.next();
+			int source = rs.getInt("id");
+			
+			statement = con.prepareStatement( "SELECT * FROM articles WHERE source = ?" );
+			statement.setInt(1, source );
+			
+			rs = statement.executeQuery();
+			
+			while( rs.next() ) {
+				String title = rs.getString("title");
+				String author = rs.getString("author");
+				String content = rs.getString("content");
+				Date date = rs.getDate("date");
+				int readen = rs.getInt("readen");
+				URL url = new URL( rs.getString("link") );
+				
+				articles.add( new Article( title, author, content, url, readen, date ) );
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		
+		
+		return articles;
+	}
 	
 }

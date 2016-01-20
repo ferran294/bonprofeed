@@ -50,4 +50,10 @@ public class TestGetArticles {
 		assertTrue( art1.getDate().compareTo(art2.getDate() ) == 1 );
 	}
 
+	@Test
+	public void get_Articles_From_Feed() {
+		ArrayList<Article> articles = dbh.getArticlesFromFeed( "name" );
+		
+		assertEquals( 1, articles.size() );
+	}
 }
