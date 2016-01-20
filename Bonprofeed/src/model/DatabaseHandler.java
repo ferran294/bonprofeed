@@ -98,6 +98,32 @@ public class DatabaseHandler {
 		return ret;
 	}
 	
+public int renameTag( String oldName, String newName ) {
+		
+		Connection con = getConnection();
+		PreparedStatement sta = null;
+		int ret = 0;
+		
+		String sql = "UPDATE tags SET name = ? WHERE name = ?;";
+		
+		try {
+			sta = con.prepareStatement( sql );
+			sta.setString(1, newName);
+			sta.setString(2, oldName);
+			ret = sta.executeUpdate( );
+		} catch( MySQLIntegrityConstraintViolationException e ) {
+			System.out.println("ERROR: Ya existe una carpeta con el mismo nombre.");
+		} catch ( SQLException e) {
+			e.printStackTrace();
+		
+		} finally {
+			try { sta.close(); } catch (SQLException e) { e.printStackTrace(); }
+		    try { con.close(); } catch (SQLException e) { e.printStackTrace(); }
+		}
+		
+		return ret;
+	}
+	
 	public int createFolder(String name){
 		Connection conn = getConnection();
 		PreparedStatement statement = null;
@@ -625,9 +651,11 @@ public class DatabaseHandler {
 				String getFeedSQL = String.format("SELECT name, url FROM feeds WHERE id = %d;" , feedsIds.get(i) );
 				rs = statement.executeQuery(getFeedSQL);
 				
-				rs.next();
-				Feed feed = new Feed( rs.getString("name"), rs.getString("url") );
-				feedsList.add(feed);
+				if( rs.next() ) {
+					Feed feed = new Feed( rs.getString("name"), rs.getString("url") );
+					
+					feedsList.add(feed);
+				}
 			}
 		
 		} catch ( SQLException e ) {
@@ -721,7 +749,7 @@ public class DatabaseHandler {
 			String getFeedsFromTagSQL = String.format("SELECT id_feed FROM feeds_tags WHERE id_tag = %d;", idTag);
 			rs = statement.executeQuery(getFeedsFromTagSQL);
 			
-			// Itera sobre todos ids de los feeds de una carpeta.
+			// Itera sobre todos ids de los feeds de una etiquetas.
 			while( rs.next() ) {			
 				int idFeed = rs.getInt("id_feed");
 				feedsIds.add(idFeed);
@@ -731,21 +759,23 @@ public class DatabaseHandler {
 				String getFeedSQL = String.format("SELECT name, url FROM feeds WHERE id = %d;" , feedsIds.get(i) );
 				rs = statement.executeQuery(getFeedSQL);
 				
-				rs.next();
-				Feed feed = new Feed( rs.getString("name"), rs.getString("url") );
-				feedsList.add(feed);
+				if( rs.next() ) {
+					Feed feed = new Feed( rs.getString("name"), rs.getString("url") );
+					
+					feedsList.add(feed);
+				}
 			}
-			
-			
 		
 		} catch ( SQLException e ) {
 			e.printStackTrace();
 		} finally {
+			
 			try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
 			try { statement.close(); } catch (SQLException e) { e.printStackTrace(); }
 		    try { con.close(); } catch (SQLException e) { e.printStackTrace(); }
 		}
-			
+		
+		
 		return feedsList;
 		
 	}
@@ -862,6 +892,47 @@ public class DatabaseHandler {
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
+		
+		return articles;
+	}
+
+	public ArrayList<Article> getArticlesFromFeed(String string) {
+		ArrayList<Article> articles = new ArrayList<Article>();
+		
+		Connection con = getConnection();
+		PreparedStatement statement = null;
+		ResultSet rs = null;
+		
+		try {
+			statement = con.prepareStatement("SELECT id FROM feeds WHERE name = ?;");
+			statement.setString( 1, string );
+			
+			rs = statement.executeQuery();
+			rs.next();
+			int source = rs.getInt("id");
+			
+			statement = con.prepareStatement( "SELECT * FROM articles WHERE source = ?" );
+			statement.setInt(1, source );
+			
+			rs = statement.executeQuery();
+			
+			while( rs.next() ) {
+				String title = rs.getString("title");
+				String author = rs.getString("author");
+				String content = rs.getString("content");
+				Date date = rs.getDate("date");
+				int readen = rs.getInt("readen");
+				URL url = new URL( rs.getString("link") );
+				
+				articles.add( new Article( title, author, content, url, readen, date ) );
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		
 		
 		return articles;
 	}
