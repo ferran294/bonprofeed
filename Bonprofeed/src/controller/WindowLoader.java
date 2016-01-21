@@ -192,4 +192,45 @@ public class WindowLoader {
 		}
 		
 	}
+	
+	public void loadAssign(Node element){
+		Stage stage;
+		Parent root;
+		
+		
+		try {
+			setActualView("assign");
+			stage = (Stage) element.getScene().getWindow();
+			root = FXMLLoader.load(getClass().getResource("/view/Assign.fxml"));
+			Scene scene = new Scene(root);
+			stage.setTitle("Asigna un feed a una carpeta o etiqueta");
+		    stage.setScene(scene);
+		    stage.show();
+		    
+		    
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void loadDeleteFeed(Node element) {
+		Stage stage;
+		Parent root;
+		
+		
+		try {
+			setActualView("deleteFeed");
+			stage = (Stage) element.getScene().getWindow();
+			root = FXMLLoader.load(getClass().getResource("/view/DeleteFeed.fxml"));
+			Scene scene = new Scene(root);
+			stage.setTitle("Elimina un Feed");
+		    stage.setScene(scene);
+		    stage.show();
+		    
+		    
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
 }

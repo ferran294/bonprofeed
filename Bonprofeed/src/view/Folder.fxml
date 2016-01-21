@@ -23,5 +23,10 @@
     <Label fx:id="errorFolder" layoutX="409.0" layoutY="118.0" prefWidth="219.0" text="" textFill="RED" />
     <Button fx:id="btnDeleteFolder" layoutX="639.0" layoutY="116.0" mnemonicParsing="false" onAction="#deleteFolder" text="Eliminar Carpeta" />
     <Button fx:id="btnBack" layoutX="685.0" layoutY="42.0" mnemonicParsing="false" onAction="#backFromFolder" prefHeight="28.0" prefWidth="72.0" text="Volver" />
+    <ListView fx:id="listFeeds" layoutX="14.0" layoutY="218.0" prefHeight="368.0" prefWidth="493.0" />
+    <Label layoutX="544.0" layoutY="227.0" text="Desasignar Feed de la carpeta" />
+    <TextField id="feedName" fx:id="feedNameDis" layoutX="544.0" layoutY="261.0" prefHeight="28.0" prefWidth="200.0" promptText="Introduce nombre de Feed" />
+    <Button fx:id="btnDisFolder" layoutX="601.0" layoutY="300.0" mnemonicParsing="false" onAction="#disassignFeedFromFolder" prefHeight="25.0" prefWidth="98.0" text="Desasignar" />
+    <Label fx:id="errorDisFolder" layoutX="544.0" layoutY="372.0" prefWidth="227.0" text="" textFill="#cc0000" />
   </children>
 </AnchorPane>

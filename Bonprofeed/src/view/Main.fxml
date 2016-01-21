@@ -47,5 +47,7 @@
     </TabPane>
     <Button id="btnAnadirFeed" fx:id="btnNewFolder" alignment="CENTER" cancelButton="false" defaultButton="false" focusTraversable="true" layoutX="214.0" layoutY="36.0" mnemonicParsing="false" onAction="#loadNewFolder" prefHeight="47.0" prefWidth="137.0" styleClass="null" text="Nueva Carpeta" textFill="BLACK" underline="false" visible="true" wrapText="false" />
     <Button id="btnAnadirFeed" fx:id="btnNewTag" alignment="CENTER" cancelButton="false" defaultButton="false" focusTraversable="true" layoutX="402.0" layoutY="36.0" mnemonicParsing="false" onAction="#loadNewTagWindow" prefHeight="47.0" prefWidth="137.0" styleClass="null" text="Añadir Etiqueta" textFill="BLACK" underline="false" visible="true" wrapText="false" />
+    <Button id="btnAnadirFeed" alignment="CENTER" cancelButton="false" defaultButton="false" focusTraversable="true" layoutX="582.0" layoutY="36.0" mnemonicParsing="false" onAction="#loadAssign" prefHeight="47.0" prefWidth="137.0" styleClass="null" text="Asignar Feed" textFill="BLACK" underline="false" visible="true" wrapText="false" />
+    <Button id="btnAnadirFeed" alignment="CENTER" cancelButton="false" defaultButton="false" focusTraversable="true" layoutX="755.0" layoutY="36.0" mnemonicParsing="false" onAction="#loadDeleteFeed" prefHeight="47.0" prefWidth="137.0" styleClass="null" text="Borrar Feed" textFill="BLACK" underline="false" visible="true" wrapText="false" />
   </children>
 </AnchorPane>

@@ -20,8 +20,13 @@
     <Label layoutX="8.0" layoutY="119.0" prefWidth="115.0" text="Cambiar nombre:" textFill="WHITE" />
     <TextField id="newName" fx:id="textNewTag" layoutX="135.0" layoutY="116.0" prefWidth="180.0" promptText="Escribe el nuevo nombre" />
     <Button id="btnSetFolderName" fx:id="btnSetTagName" layoutX="324.0" layoutY="117.0" mnemonicParsing="false" onAction="#setTagName" text="Cambiar" />
-    <Label id="errorFolder" layoutX="410.0" layoutY="119.0" prefWidth="219.0" text="" textFill="RED" />
+    <Label id="errorFolder" fx:id="textErrorTag" layoutX="410.0" layoutY="119.0" prefWidth="219.0" text="" textFill="RED" />
     <Button id="btnDeleteFolder" fx:id="btnDeleteTag" layoutX="640.0" layoutY="117.0" mnemonicParsing="false" onAction="#deleteTag" text="Eliminar Etiqueta" />
     <Button fx:id="btnBack" layoutX="686.0" layoutY="43.0" mnemonicParsing="false" onAction="#backFromFolder" prefHeight="28.0" prefWidth="72.0" text="Volver" />
+    <ListView id="listFeeds" fx:id="listFeedsTag" layoutX="35.0" layoutY="200.0" prefHeight="361.0" prefWidth="512.0" />
+    <Label layoutX="568.0" layoutY="229.0" text="Desasigna un Feed de la etiqueta" />
+    <TextField fx:id="feedDisTag" layoutX="578.0" layoutY="264.0" prefWidth="200.0" promptText="Nombre del Feed" />
+    <Button layoutX="627.0" layoutY="312.0" mnemonicParsing="false" onAction="#disassignFeedFromTag" text="Desasignar" />
+    <Label fx:id="errorDisTag" layoutX="578.0" layoutY="389.0" prefWidth="200.0" text="" />
   </children>
 </AnchorPane>
