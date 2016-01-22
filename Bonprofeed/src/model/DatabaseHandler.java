@@ -996,5 +996,44 @@ public int renameTag( String oldName, String newName ) {
 		return ret;
 	}
 	
+	public ArrayList<Article> getArticlesFromFolder( String folder ) {
+		
+		ArrayList<Article> articles = new ArrayList<Article>();
+		
+		Connection con = getConnection();
+		PreparedStatement sta = null;
+		ResultSet rs = null;
+		
+		String sql = "SELECT a.title, a.author, a.content, a.link, a.readen, a.date "
+				+ "FROM folders AS fo "
+				+ "INNER JOIN feeds_folders AS ff ON (fo.id = ff.id_folder) "
+				+ "INNER JOIN feeds AS f ON (ff.id_feed = f.id) "
+				+ "INNER JOIN articles AS a ON (f.id = a.source) "
+				+ "WHERE fo.name = ?;";
+		
+		try {
+			sta = con.prepareStatement(sql);
+			sta.setString(1, folder);
+			rs = sta.executeQuery();
+			
+			while( rs.next() ) {
+				String title = rs.getString("title");
+				String author = rs.getString("author");
+				String content = rs.getString("content");
+				Date date = rs.getDate("date");
+				int readen = rs.getInt("readen");
+				URL url = new URL( rs.getString("link") );
+				
+				articles.add( new Article( title, author, content, url, readen, date ) );
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		
+		
+		return articles;
+	}
 	
 }
