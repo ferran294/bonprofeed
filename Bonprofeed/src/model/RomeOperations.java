@@ -148,12 +148,15 @@ public class RomeOperations {
 				for ( int j = 0; j < entryList.size(); j++ ) {
 				
 					String author = entryList.get(j).getAuthor();
+					
 					String content = entryList.get(j).getDescription().getValue();
+					
+					
 					String title = entryList.get(j).getTitle();
 					String link = entryList.get(j).getLink();
 					Date date = entryList.get(j).getPublishedDate();
 					
-					if( title == articles.get(0).getTitle() ) {
+					if( date.compareTo(articles.get(0).getDate()) < 1 ) {
 						break;
 					}
 					
