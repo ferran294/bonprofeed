@@ -937,4 +937,63 @@ public int renameTag( String oldName, String newName ) {
 		return articles;
 	}
 	
+	public ArrayList<Feed> getAllFeeds() {
+		ArrayList<Feed> feeds = new ArrayList<Feed>();
+		
+		Connection con = getConnection();
+		PreparedStatement sta = null;
+		ResultSet rs = null;
+		
+		try {
+			sta = con.prepareStatement( "SELECT name, link FROM feeds;");
+			rs = sta.executeQuery();
+			
+			while( rs.next() ) {
+				String name = rs.getString( "name" );
+				String link = rs.getString( "link" );
+				
+				Feed feed = new Feed( name, link );
+			
+				feeds.add( feed );
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		
+		return feeds;
+	}
+	
+	public int disassignFromFolder( String name ) {
+		Connection con = getConnection();
+		PreparedStatement statement = null;
+		ResultSet rs = null;
+		int ret = 0;
+		
+		String sqlIdFeed = "SELECT id FROM feeds WHERE name = ?;";
+		
+		try {
+			
+			//Sacamos el ID del Feed.
+			statement = con.prepareStatement( sqlIdFeed );
+			statement.setString(1, name);
+			rs = statement.executeQuery();
+			rs.next();
+			int idFeed = rs.getInt("id");
+			
+			statement = con.prepareStatement( "DELETE FROM feeds_folders WHERE id_feed = ?" );
+			statement.setInt( 1, idFeed );
+			
+			ret = statement.executeUpdate();
+		
+		
+		} catch(SQLException e) {
+			e.printStackTrace();
+		
+		} 
+		
+		return ret;
+	}
+	
 }
