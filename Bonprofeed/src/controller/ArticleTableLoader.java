@@ -25,7 +25,7 @@ public class ArticleTableLoader {
 	
 	public void generateArticleTable(){
 		ObservableList<Article> articles = FXCollections.observableArrayList(this.articles);
-		
+
 		// Initialize the columns.
 		articleTable.getColumnTitle().setCellValueFactory(cellData -> cellData.getValue().getTitleProperty());
 		articleTable.getColumnAuthor().setCellValueFactory(cellData -> cellData.getValue().getAuthorProperty());

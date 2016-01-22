@@ -11,18 +11,19 @@
   <!-- TODO Add Nodes -->
   <children>
     <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="118.0" layoutX="-1.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1211.0" />
-    <Label layoutX="40.0" layoutY="62.0" prefWidth="609.0" text="Feed Title" textFill="WHITE">
+    <Label fx:id="textFeedTitle" layoutX="40.0" layoutY="62.0" prefWidth="609.0" text="Feed Title" textFill="WHITE">
       <font>
         <Font size="30.0" />
       </font>
     </Label>
-    <TableView fx:id="articlesList" layoutX="-1.0" layoutY="118.0" prefHeight="680.0" prefWidth="1211.0">
+    <TableView id="articlesList" fx:id="articlesListFeed" layoutX="-1.0" layoutY="118.0" prefHeight="680.0" prefWidth="1211.0">
       <columns>
-        <TableColumn editable="false" prefWidth="75.0" text="Visto" fx:id="columnVisto" />
-        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="765.0" resizable="true" sortable="false" text="Titulo" fx:id="columnTitle" />
-        <TableColumn maxWidth="5000.0" minWidth="0.0" prefWidth="179.0" text="Autor" fx:id="columnAuthor" />
-        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="192.0" text="Fecha" fx:id="columnDate" />
+        <TableColumn editable="false" prefWidth="75.0" text="Visto" fx:id="columnVistoFeed" />
+        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="765.0" resizable="true" sortable="false" text="Titulo" fx:id="columnTitleFeed" />
+        <TableColumn maxWidth="5000.0" minWidth="0.0" prefWidth="179.0" text="Autor" fx:id="columnAuthorFeed" />
+        <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="192.0" text="Fecha" fx:id="columnDateFeed" />
       </columns>
     </TableView>
+    <Button fx:id="btnBack" layoutX="1073.0" layoutY="66.0" mnemonicParsing="false" onAction="#backFromFolder" prefHeight="28.0" prefWidth="72.0" text="Volver" />
   </children>
 </AnchorPane>
