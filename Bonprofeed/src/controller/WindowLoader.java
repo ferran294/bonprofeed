@@ -11,6 +11,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TreeItem;
 import javafx.stage.Stage;
 import model.Article;
+import model.Feed;
 import model.Folder;
 import model.Tag;
 
@@ -173,15 +174,22 @@ public class WindowLoader {
 	}
 
 	public void loadArticle(Article article,Node element) {
+		
 		Stage stage;
 		Parent root;
 		
 		
 		try {
 			setActualView("article");
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Article.fxml"));
+			
+			root = (Parent) loader.load();
 			stage = (Stage) element.getScene().getWindow();
-			root = FXMLLoader.load(getClass().getResource("/view/Article.fxml"));
+			ControllerMain controller = loader.getController();
+			controller.setActualArticle(article);
+			
 			Scene scene = new Scene(root);
+			
 			stage.setTitle(article.getTitle());
 		    stage.setScene(scene);
 		    stage.show();
@@ -228,6 +236,34 @@ public class WindowLoader {
 		    stage.show();
 		    
 		    
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	public void loadFeedWindow(Feed feedSelected, TreeItem treeItem,Node element) {
+		Stage stage;
+		Parent root;
+		
+		
+		try {
+			setActualView("feed");
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Article.fxml"));
+			root = (Parent) loader.load();
+			stage = (Stage) element.getScene().getWindow();
+			
+			ControllerMain controller = loader.getController();
+			controller.setActualFeed(feedSelected);
+			
+			Scene scene = new Scene(root);
+			stage.setTitle(treeItem.getValue().toString());
+		    stage.setScene(scene);
+		    
+		    stage.show();
+		    
+		    
+	        System.out.println("Selected item is" + treeItem);	
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
