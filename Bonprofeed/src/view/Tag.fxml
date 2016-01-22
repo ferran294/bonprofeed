@@ -29,16 +29,16 @@
     <Label fx:id="errorDisTag" layoutX="578.0" layoutY="389.0" prefWidth="200.0" text="" />
     <TabPane layoutX="29.0" layoutY="183.0" prefHeight="385.0" prefWidth="522.0" tabClosingPolicy="UNAVAILABLE">
       <tabs>
-        <Tab text="Articles">
+        <Tab text="Feeds">
           <content>
             <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
               <children>
-                <ListView id="listArticlesFolder" prefHeight="349.0" prefWidth="483.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                <ListView id="listArticlesFolder" fx:id="listFeedsTag" prefHeight="349.0" prefWidth="483.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
               </children>
             </AnchorPane>
           </content>
         </Tab>
-        <Tab text="Feeds">
+        <Tab text="Articles">
           <content>
             <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
               <children>
