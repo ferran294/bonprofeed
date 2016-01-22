@@ -1046,7 +1046,7 @@ public ArrayList<Article> getArticlesFromTag( String tag ) {
 		
 		String sql = "SELECT a.title, a.author, a.content, a.link, a.readen, a.date "
 				+ "FROM tags AS t "
-				+ "INNER JOIN feeds_tags AS ft ON (t.id = ft.id_folder) "
+				+ "INNER JOIN feeds_tags AS ft ON (t.id = ft.id_tag) "
 				+ "INNER JOIN feeds AS f ON (ft.id_feed = f.id) "
 				+ "INNER JOIN articles AS a ON (f.id = a.source) "
 				+ "WHERE t.name = ?;";

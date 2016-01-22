@@ -29,16 +29,16 @@
     <Label fx:id="errorDisFolder" layoutX="544.0" layoutY="372.0" prefWidth="227.0" text="" textFill="#cc0000" />
     <TabPane layoutX="37.0" layoutY="173.0" prefHeight="385.0" prefWidth="483.0" tabClosingPolicy="UNAVAILABLE">
       <tabs>
-        <Tab text="Articles">
+        <Tab text="Feeds">
           <content>
             <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
               <children>
-                <ListView fx:id="listArticlesFolder" prefHeight="349.0" prefWidth="483.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                <ListView id="listArticlesFolder" fx:id="listFeeds" prefHeight="349.0" prefWidth="483.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
               </children>
             </AnchorPane>
           </content>
         </Tab>
-        <Tab text="Feeds">
+        <Tab text="Articles">
           <content>
             <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
               <children>
@@ -47,7 +47,7 @@
                     <TableColumn editable="false" prefWidth="75.0" text="Visto" fx:id="columnVistoFolder" />
                     <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="206.0" resizable="true" sortable="false" text="Titulo" fx:id="columnTitleFolder" />
                     <TableColumn maxWidth="5000.0" minWidth="0.0" prefWidth="100.0" text="Autor" fx:id="columnAuthorFolder" />
-                    <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="100.0" text="Fecha" fx:id="columnDateFeed" />
+                    <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="100.0" text="Fecha" fx:id="columnDateFolder" />
                   </columns>
                 </TableView>
               </children>

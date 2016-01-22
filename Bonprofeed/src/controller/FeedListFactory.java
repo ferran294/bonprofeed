@@ -23,9 +23,12 @@ public class FeedListFactory {
 	
 	public void generateFolderFeedsList(String folder){
 		ObservableList<Feed> feeds = FXCollections.observableArrayList(dbh.getFeedsFromFolder(folder));
-		listView.setItems(feeds);
 		
-		 listView.setCellFactory(new Callback<ListView<Feed>, ListCell<Feed>>(){
+		
+		if(feeds.size()>0){
+				listView.setItems(feeds);
+		
+				listView.setCellFactory(new Callback<ListView<Feed>, ListCell<Feed>>(){
 			 
 	            @Override
 	            public ListCell<Feed> call(ListView<Feed> p) {
@@ -46,7 +49,7 @@ public class FeedListFactory {
 	            }
 	        });
 		
-		 
+		}
 	}
 	
 	
