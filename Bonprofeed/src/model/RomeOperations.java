@@ -90,7 +90,7 @@ public class RomeOperations {
 		
 	}
 	
-	public void pushArticlesIntoDatabase( String name, String link ) {
+	public void pushArticlesIntoDatabase( String link ) {
 		DatabaseHandler dbh = new DatabaseHandler();
 		
 		SyndFeedInput input = new SyndFeedInput();			
@@ -111,7 +111,7 @@ public class RomeOperations {
 				String url = entryList.get(i).getLink();
 				Date date = entryList.get(i).getPublishedDate();
 				
-				dbh.insertArticle(title, content, author, link, name, date );
+				dbh.insertArticle(title, content, author, link, feed.getTitle(), date );
 			}
 			
 		} catch (MalformedURLException e) {
