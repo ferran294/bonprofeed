@@ -54,6 +54,7 @@ public class ControllerNewFeed implements Initializable{
 				errorFeedLabel.setText("El Feed ya existe en tu coleccion");
 			}else{
 				errorFeedLabel.setText("Correcto");
+				//rome.pushArticlesIntoDatabase(name, link);
 				loadMain(errorFeedLabel);
 			}
 			

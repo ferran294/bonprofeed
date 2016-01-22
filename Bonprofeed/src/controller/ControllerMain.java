@@ -187,6 +187,7 @@ public class ControllerMain implements Initializable{
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		String actualView = windowLoader.getActualView();
+	
 		
 		if(actualView == "folder"){
 			

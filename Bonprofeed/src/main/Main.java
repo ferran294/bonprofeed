@@ -9,6 +9,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import model.DatabaseHandler;
+import model.RomeOperations;
 
 
 public class Main extends Application {
@@ -23,6 +25,10 @@ public class Main extends Application {
 	public void start(Stage primaryStage) throws Exception {
 		Parent root = FXMLLoader.load(getClass().getResource("/view/Main.fxml"));
 		Scene scene = new Scene(root,1200,800);
+		
+		//Load Artciles from feed and put into database
+		RomeOperations rome = new RomeOperations();
+		rome.updateArticles();
 		
 		
 		primaryStage.setResizable(false);
