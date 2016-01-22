@@ -48,6 +48,8 @@ public class FeedListFactory {
 		
 		 
 	}
+	
+	
 	/*
 	public void generateAllFeedsList(){
 		ObservableList<Feed> feeds = FXCollections.observableArrayList(dbh.getAllFeeds());

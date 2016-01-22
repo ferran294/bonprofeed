@@ -23,10 +23,31 @@
     <Label fx:id="errorFolder" layoutX="409.0" layoutY="118.0" prefWidth="219.0" text="" textFill="RED" />
     <Button fx:id="btnDeleteFolder" layoutX="639.0" layoutY="116.0" mnemonicParsing="false" onAction="#deleteFolder" text="Eliminar Carpeta" />
     <Button fx:id="btnBack" layoutX="685.0" layoutY="42.0" mnemonicParsing="false" onAction="#backFromFolder" prefHeight="28.0" prefWidth="72.0" text="Volver" />
-    <ListView fx:id="listFeeds" layoutX="14.0" layoutY="218.0" prefHeight="368.0" prefWidth="493.0" />
     <Label layoutX="544.0" layoutY="227.0" text="Desasignar Feed de la carpeta" />
     <TextField id="feedName" fx:id="feedNameDis" layoutX="544.0" layoutY="261.0" prefHeight="28.0" prefWidth="200.0" promptText="Introduce nombre de Feed" />
     <Button fx:id="btnDisFolder" layoutX="601.0" layoutY="300.0" mnemonicParsing="false" onAction="#disassignFeedFromFolder" prefHeight="25.0" prefWidth="98.0" text="Desasignar" />
     <Label fx:id="errorDisFolder" layoutX="544.0" layoutY="372.0" prefWidth="227.0" text="" textFill="#cc0000" />
+    <TabPane layoutX="37.0" layoutY="173.0" prefHeight="385.0" prefWidth="483.0" tabClosingPolicy="UNAVAILABLE">
+      <tabs>
+        <Tab text="Articles">
+          <content>
+            <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+              <children>
+                <ListView fx:id="listArticlesFolder" prefHeight="349.0" prefWidth="483.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+              </children>
+            </AnchorPane>
+          </content>
+        </Tab>
+        <Tab text="Feeds">
+          <content>
+            <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+              <children>
+                <ListView fx:id="listFeeds" layoutX="-5.0" layoutY="-9.0" prefHeight="368.0" prefWidth="493.0" />
+              </children>
+            </AnchorPane>
+          </content>
+        </Tab>
+      </tabs>
+    </TabPane>
   </children>
 </AnchorPane>

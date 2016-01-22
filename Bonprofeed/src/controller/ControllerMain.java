@@ -50,6 +50,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import model.Article;
+import model.ArticleTable;
 import model.DatabaseHandler;
 import model.Feed;
 import model.Folder;
@@ -62,9 +63,10 @@ public class ControllerMain implements Initializable{
 	private RomeOperations rome;
 	private WindowLoader windowLoader = new WindowLoader();
 	private static Folder actualFolder;
-	private static Article actualArticle;
+	private Article actualArticle;
 	private static Tag actualTag;
 	ArrayList<Folder> folders = dbh.getFolders();
+	ArrayList<Feed> feeds = dbh.getAllFeeds();
 	@FXML TreeView<String> folderTree;
 	@FXML TreeView<String> tagTree;
 	@FXML
@@ -158,6 +160,7 @@ public class ControllerMain implements Initializable{
 			labelFolderName.setText(actualFolder.getName());
 			FeedListFactory listGenerator = new FeedListFactory(dbh, listFeeds);
 			listGenerator.generateFolderFeedsList(actualFolder.getName());
+			
 		}else if (actualView == "newFolder"){
 			
 		}else if(actualView == "newTag"){
@@ -169,17 +172,14 @@ public class ControllerMain implements Initializable{
 			listGenerator.generateTagFeedsList(actualTag.getName());
 			
 		}else if(actualView == "article"){
-		
-			textTitle.setText(actualArticle.getTitle());
-			textAuthor.setText(actualArticle.getAuthor());
-			textDate.setText(actualArticle.getDate().toString());
-			dbh.markAsRead(actualArticle.getTitle());
-			final WebEngine webEngine = htmlContainer.getEngine();
-			webEngine.loadContent(actualArticle.getContent());
+			
+			
 
 		}else if(actualView == "assign"){
 			
 		}else if(actualView == "deleteFeed"){
+			
+		}else if(actualView == "feed"){
 			
 		}else{
 		
@@ -195,72 +195,9 @@ public class ControllerMain implements Initializable{
 	
 	public void generateArticleList(){
 		ObservableList<Article> articles = FXCollections.observableArrayList(dbh.getAllArticles());
-		
-		// Initialize the columns.
-		columnTitle.setCellValueFactory(cellData -> cellData.getValue().getTitleProperty());
-		columnAuthor.setCellValueFactory(cellData -> cellData.getValue().getAuthorProperty());
-		columnDate.setCellValueFactory(cellData -> cellData.getValue().getDateProperty());
-		columnVisto.setCellValueFactory(cellData -> cellData.getValue().getReadenProperty());
-		
-		columnDate.setCellFactory(column -> {
-			return new TableCell<Article, Date>() {
-				@Override
-				protected void updateItem(Date item, boolean empty) {
-					super.updateItem(item, empty);
-					
-					if (item == null || empty) {
-						setText(null);
-						setStyle("");
-					} else {
-						// Format date.
-						setText(item.toString());
-						
-					}
-				}
-			};
-		});
-		
-		columnVisto.setCellFactory(column -> {
-			return new TableCell<Article, Integer>() {
-				@Override
-				protected void updateItem(Integer item, boolean empty) {
-					super.updateItem(item, empty);
-					
-					if (item == null || empty) {
-						setText(null);
-						setStyle("");
-					} else {
-						// Format date.
-						if(item == 0){
-							setText("No Visto");
-							setStyle("-fx-background-color: red; -fx-text-fill: white;");
-						}else{
-							setText("Visto");
-							setStyle("-fx-background-color: green; -fx-text-fill: white;");
-						}
-						
-						
-					}
-				}
-			};
-		});
-		
-		
-		articlesList.setRowFactory( tv -> {
-		    TableRow<Article> row = new TableRow<>();
-		    row.setOnMouseClicked(event -> {
-		        if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
-		            Article rowArticle = row.getItem();
-		            actualArticle= rowArticle;
-		            windowLoader.loadArticle(rowArticle,row);
-		            
-		        }
-		    });
-		    return row ;
-		});
-		
-		articlesList.setItems(articles);
-		
+		ArticleTable articleTable = new ArticleTable(articlesList, columnVisto, columnTitle, columnAuthor, columnDate);
+		ArticleTableLoader tableLoader = new ArticleTableLoader(articleTable, articles, windowLoader);
+		tableLoader.generateArticleTable();
 	}
 	
 	public void generateFolderTree(){
@@ -311,6 +248,11 @@ public class ControllerMain implements Initializable{
             	
             	Folder folderSelected = getFolder(folders, treeItem.getValue().toString());
     			loadFolderWindow(folderSelected, treeItem);
+            }
+            
+            if(treeItem.isLeaf()){
+            	Feed feedSelected = getFeed(feeds,treeItem.getValue().toString());
+            	windowLoader.loadFeedWindow(feedSelected,treeItem,folderTree);
             }
             
     		
@@ -415,7 +357,9 @@ public class ControllerMain implements Initializable{
 	
 	//Folder Window -------------------------------
 	
-	
+	public static void setActualFolder(Folder folder){
+		actualFolder=folder;
+	}
 	
 	public void setFolderName(){
 		
@@ -467,6 +411,7 @@ public class ControllerMain implements Initializable{
 	
 	public void loadMain(Node element){
 		windowLoader.loadMain(element);
+		
 	}
 	
 	// ---------------------------------------------------
@@ -604,6 +549,36 @@ public class ControllerMain implements Initializable{
 		}
 	}
 	
+	//------- Article controller ------
+	
+	public void setActualArticle(Article article){
+		this.actualArticle=article;
+		textTitle.setText(actualArticle.getTitle());
+		textAuthor.setText(actualArticle.getAuthor());
+		textDate.setText(actualArticle.getDate().toString());
+		dbh.markAsRead(actualArticle.getTitle());
+		final WebEngine webEngine = htmlContainer.getEngine();
+		webEngine.loadContent(actualArticle.getContent());
+		
+		
+	}
 	
 	
+	//------ Feed controller ----
+	
+	public void setActualFeed(Feed feed){
+		ObservableList<Article> articles = FXCollections.observableArrayList(dbh.getArticlesFromFeed(feed.getName()));
+		ArticleTable articleTable = new ArticleTable(articlesList, columnVisto, columnTitle, columnAuthor, columnDate);
+		ArticleTableLoader tableLoader = new ArticleTableLoader(articleTable, articles, windowLoader);
+		tableLoader.generateArticleTable();
+	}
+	
+	public Feed getFeed(ArrayList<Feed> feeds,String feedName){
+		for(Feed f : feeds){
+	        if(f.getName() == feedName){
+	        	return f;
+	        }
+	    }
+		return null;
+	}
 }
