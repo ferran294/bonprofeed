@@ -1036,7 +1036,7 @@ public int renameTag( String oldName, String newName ) {
 		return articles;
 	}
 	
-public ArrayList<Article> getArticlesFromTag( String tag ) {
+	public ArrayList<Article> getArticlesFromTag( String tag ) {
 		
 		ArrayList<Article> articles = new ArrayList<Article>();
 		
