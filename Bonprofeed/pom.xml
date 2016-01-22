@@ -14,6 +14,7 @@
           <target>1.8</target>
         </configuration>
       </plugin>
+      
     </plugins>
   </build>
   <dependencies>
@@ -32,5 +33,11 @@
   		<artifactId>mysql-connector-java</artifactId>
   		<version>5.1.38</version>
   	</dependency>
+  	<dependency>
+	<groupId>com.zenjava</groupId>
+	<artifactId>javafx-maven-plugin</artifactId>
+	<version>8.2.0</version>
+</dependency>
+  	
   </dependencies>
 </project>

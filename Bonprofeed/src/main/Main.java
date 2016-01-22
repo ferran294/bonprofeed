@@ -2,18 +2,14 @@ package main;
 
 import java.util.LinkedList;
 
-import controller.ControllerMain;
-import controller.WindowLoader;
+
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
 import javafx.stage.Stage;
-import model.Folder;
-import model.Feed;
+
 
 public class Main extends Application {
 	
