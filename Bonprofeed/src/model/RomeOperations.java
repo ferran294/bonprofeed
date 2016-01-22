@@ -3,7 +3,14 @@ package model;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
+import com.rometools.rome.feed.atom.Content;
+import com.rometools.rome.feed.synd.SyndContent;
+import com.rometools.rome.feed.synd.SyndEnclosure;
+import com.rometools.rome.feed.synd.SyndEntry;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
@@ -15,7 +22,6 @@ public class RomeOperations {
 		super();
 	
 	}
-	
 	
 	/**
 	 * function isFeed
@@ -80,9 +86,54 @@ public class RomeOperations {
 			e.printStackTrace();
 		}
 		
-		return null;
+		return null;		
 		
+	}
+	
+	public void updateArticles() {
 		
+		DatabaseHandler dbh = new DatabaseHandler();
+		ArrayList<Feed> feeds = dbh.getAllFeeds();
+	
+		for ( int i = 0; i < feeds.size(); i++ ) {
+			SyndFeedInput input = new SyndFeedInput();			
+			SyndFeed feed;
+			
+			Feed f = feeds.get(i);
+			
+			ArrayList<Article> articles = dbh.getArticlesFromFeed( f.getName() );
+			
+			try {
+				URL feedUrl = new URL ( f.getUrl() );
+				feed = input.build( new XmlReader( feedUrl ));
+				
+				List<SyndEntry> entryList = feed.getEntries();
+				
+				for ( int j = 0; j < entryList.size(); j++ ) {
+				
+					String author = entryList.get(j).getAuthor();
+					String content = entryList.get(j).getDescription().getValue();
+					String title = entryList.get(j).getTitle();
+					String link = entryList.get(j).getLink();
+					Date date = entryList.get(j).getPublishedDate();
+					
+					if( title == articles.get(0).getTitle() ) {
+						break;
+					}
+					
+					dbh.insertArticle(title, content, author, link, f.getName(), date );
+				}
+				
+			} catch (MalformedURLException e) {
+				e.printStackTrace();
+			} catch (IllegalArgumentException e) {
+				e.printStackTrace();
+			} catch (FeedException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
 		
 	}
 }
