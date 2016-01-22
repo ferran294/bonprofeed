@@ -2,11 +2,16 @@ package controller;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.Month;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.ResourceBundle;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -26,7 +31,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SelectionMode;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
@@ -37,6 +44,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import model.Article;
@@ -52,6 +62,7 @@ public class ControllerMain implements Initializable{
 	private RomeOperations rome;
 	private WindowLoader windowLoader = new WindowLoader();
 	private static Folder actualFolder;
+	private static Article actualArticle;
 	private static Tag actualTag;
 	ArrayList<Folder> folders = dbh.getFolders();
 	@FXML TreeView<String> folderTree;
@@ -59,11 +70,13 @@ public class ControllerMain implements Initializable{
 	@FXML
 	private TableView<Article> articlesList;
 	@FXML
+	private TableColumn<Article, Integer> columnVisto;
+	@FXML
 	private TableColumn<Article, String> columnTitle;
 	@FXML
 	private TableColumn<Article, String> columnAuthor;
 	@FXML
-	private TableColumn<Article, String> columnDate;
+	private TableColumn<Article, Date> columnDate;
 	@FXML private AnchorPane panelArticles;
 	//Folder view
 	@FXML
@@ -78,6 +91,10 @@ public class ControllerMain implements Initializable{
 	private Button btnDeleteFolder;
 	@FXML
 	private Button btnBack;
+	@FXML
+	private ListView listFeeds;
+	@FXML
+	private TextField feedNameDis;
 	//New Folder view
 	@FXML
 	private TextField textNewFolder;
@@ -95,6 +112,38 @@ public class ControllerMain implements Initializable{
 	//Tag
 	@FXML
 	private Label labelTagName;
+	@FXML
+	private TextField feedDisTag;
+	@FXML
+	private Label errorDisTag;
+	//Article
+	@FXML
+	private Label textTitle;
+	@FXML
+	private Label textAuthor;
+	@FXML
+	private Label textDate;
+	@FXML
+	private ListView listFeedsTag;
+	@FXML private WebView htmlContainer = new WebView();
+	//Assign
+	@FXML
+	private Label errorTagAssign;
+	@FXML
+	private Label errorFolderAssign;
+	@FXML
+	private TextField textFeedTag;
+	@FXML
+	private TextField textTagAssigned;
+	@FXML
+	private TextField textFeedFolder;
+	@FXML
+	private TextField textFolderAssigned;
+	//Delete
+	@FXML
+	private TextField feedName;
+	@FXML
+	private Label errorDeleteTag;
 	
 	public ControllerMain(){
 		super();
@@ -105,16 +154,39 @@ public class ControllerMain implements Initializable{
 		String actualView = windowLoader.getActualView();
 		
 		if(actualView == "folder"){
+			
 			labelFolderName.setText(actualFolder.getName());
+			FeedListFactory listGenerator = new FeedListFactory(dbh, listFeeds);
+			listGenerator.generateFolderFeedsList(actualFolder.getName());
 		}else if (actualView == "newFolder"){
 			
 		}else if(actualView == "newTag"){
 			
 		}else if(actualView == "tag"){
+			
 			labelTagName.setText(actualTag.getName());
+			FeedListFactory listGenerator = new FeedListFactory(dbh, listFeedsTag);
+			listGenerator.generateTagFeedsList(actualTag.getName());
+			
+		}else if(actualView == "article"){
+		
+			textTitle.setText(actualArticle.getTitle());
+			textAuthor.setText(actualArticle.getAuthor());
+			textDate.setText(actualArticle.getDate().toString());
+			dbh.markAsRead(actualArticle.getTitle());
+			final WebEngine webEngine = htmlContainer.getEngine();
+			webEngine.loadContent(actualArticle.getContent());
+
+		}else if(actualView == "assign"){
+			
+		}else if(actualView == "deleteFeed"){
+			
 		}else{
+		
 			generateFolderTree();
 			generateTagTree();
+			generateArticleList();
+		
 		}
 			
 		
@@ -122,20 +194,78 @@ public class ControllerMain implements Initializable{
 	}
 	
 	public void generateArticleList(){
-		dbh = new DatabaseHandler();
 		ObservableList<Article> articles = FXCollections.observableArrayList(dbh.getAllArticles());
 		
 		// Initialize the columns.
-		columnTitle.setCellValueFactory(cellData -> cellData.getValue().getTitle());
-		columnAuthor.setCellValueFactory(cellData -> cellData.getValue().getAuthor());
-		columnDate.setCellValueFactory(cellData -> cellData.getValue().getDate());
+		columnTitle.setCellValueFactory(cellData -> cellData.getValue().getTitleProperty());
+		columnAuthor.setCellValueFactory(cellData -> cellData.getValue().getAuthorProperty());
+		columnDate.setCellValueFactory(cellData -> cellData.getValue().getDateProperty());
+		columnVisto.setCellValueFactory(cellData -> cellData.getValue().getReadenProperty());
 		
+		columnDate.setCellFactory(column -> {
+			return new TableCell<Article, Date>() {
+				@Override
+				protected void updateItem(Date item, boolean empty) {
+					super.updateItem(item, empty);
+					
+					if (item == null || empty) {
+						setText(null);
+						setStyle("");
+					} else {
+						// Format date.
+						setText(item.toString());
+						
+					}
+				}
+			};
+		});
+		
+		columnVisto.setCellFactory(column -> {
+			return new TableCell<Article, Integer>() {
+				@Override
+				protected void updateItem(Integer item, boolean empty) {
+					super.updateItem(item, empty);
+					
+					if (item == null || empty) {
+						setText(null);
+						setStyle("");
+					} else {
+						// Format date.
+						if(item == 0){
+							setText("No Visto");
+							setStyle("-fx-background-color: red; -fx-text-fill: white;");
+						}else{
+							setText("Visto");
+							setStyle("-fx-background-color: green; -fx-text-fill: white;");
+						}
+						
+						
+					}
+				}
+			};
+		});
+		
+		
+		articlesList.setRowFactory( tv -> {
+		    TableRow<Article> row = new TableRow<>();
+		    row.setOnMouseClicked(event -> {
+		        if (event.getClickCount() == 2 && (! row.isEmpty()) ) {
+		            Article rowArticle = row.getItem();
+		            actualArticle= rowArticle;
+		            windowLoader.loadArticle(rowArticle,row);
+		            
+		        }
+		    });
+		    return row ;
+		});
+		
+		articlesList.setItems(articles);
 		
 	}
 	
 	public void generateFolderTree(){
  		//TreeFolder
-		dbh = new DatabaseHandler();
+		
  		TreeItem<String> rootNode = new TreeItem<String>("Todos los feeds");
  		
 		rootNode.setExpanded(true);
@@ -194,7 +324,7 @@ public class ControllerMain implements Initializable{
 	
 	public void generateTagTree(){
  		//TreeFolder
-		dbh = new DatabaseHandler();
+		
  		TreeItem<String> rootNode = new TreeItem<String>("Todas las etiquetas");
  		ArrayList<Tag> tags = dbh.getTags();
  		
@@ -288,7 +418,7 @@ public class ControllerMain implements Initializable{
 	
 	
 	public void setFolderName(){
-		dbh = new DatabaseHandler();
+		
 		String newFolderName = newName.getText();
 		String folderName = labelFolderName.getText();
 		System.out.println(newFolderName);
@@ -304,8 +434,21 @@ public class ControllerMain implements Initializable{
 		}
 	}
 	
+	public void disassignFeedFromFolder(){
+		String folderName = labelFolderName.getText();
+		String feedName = feedNameDis.getText();
+		
+		//int done = dbh.deallocateFolder(feedName, folderName);
+		/*
+		if(done == 0){
+			errorFolder.setText("El feed no existe");
+		}else{
+			loadMain(feedNameDis);
+		}
+		*/
+	}
+	
 	public void deleteFolder(){
-		dbh = new DatabaseHandler();
 		String folderName = labelFolderName.getText();
 		dbh.deleteFolder(folderName);
 		windowLoader.loadMain(btnDeleteFolder);
@@ -336,7 +479,6 @@ public class ControllerMain implements Initializable{
 	}
 	
 	public void createFolder(){
-		dbh = new DatabaseHandler();
 		String newFolderName = textNewFolder.getText();
 		
 		
@@ -359,7 +501,6 @@ public class ControllerMain implements Initializable{
 	}
 	
 	public void addTag(){
-		dbh = new DatabaseHandler();
 		String newTagName = textNewTag.getText();
 		
 		int done = dbh.createTag(newTagName);
@@ -373,8 +514,7 @@ public class ControllerMain implements Initializable{
 	
 	// ----------------- Tag Controller ---------
 	public void setTagName(){
-		/*
-		dbh = new DatabaseHandler();
+		
 		String newTagName = textNewTag.getText();
 		String tagName = labelTagName.getText();
 		System.out.println(newTagName);
@@ -383,18 +523,87 @@ public class ControllerMain implements Initializable{
 		int done = dbh.renameTag(tagName, newTagName);
 		
 		if(done == 0){
-			errorFolder.setText("El nombre de etiqueta ya existe");
+			textErrorTag.setText("El nombre de etiqueta ya existe");
 		}else{
 			labelTagName.setText(newTagName);
-			errorFolder.setText("Hecho!");
+			textErrorTag.setText("Hecho!");
 		}
-		*/
+		
 	}
 	
 	public void deleteTag(){
-		dbh = new DatabaseHandler();
 		String tagName = labelTagName.getText();
 		dbh.deleteTag(tagName);
 		windowLoader.loadMain(labelTagName);
+		
 	}
+	
+	public void disassignFeedFromTag(){
+		String tagName = labelTagName.getText();
+		String feedName = feedDisTag.getText();
+		
+		int done = dbh.deallocateTag(feedName, tagName);
+		
+		if(done == 0){
+			errorDisTag.setText("El Feed no existe");
+		}else{
+			loadMain(feedDisTag);
+		}
+		
+	}
+	
+	//------ Assign controller --------
+	
+	public void loadAssign(){
+		windowLoader.loadAssign(btnNewFolder);
+	}
+	
+	
+	public void assignTag(){
+		String feedName = textFeedTag.getText();
+		String tagName = textTagAssigned.getText();
+		
+		int done = dbh.asignTag(feedName, tagName);
+		
+		if(done == 0){
+			errorTagAssign.setText("El nombre de etiqueta o feed es incorrecto");
+		}else{
+			loadMain(textFeedTag);
+		}
+	}
+	
+	public void assignFolder(){
+		String feedName = textFeedFolder.getText();
+		String folderName = textFolderAssigned.getText();
+		
+		int done = dbh.putFeedIntoFolder(feedName, folderName);
+		
+		if(done == 0){
+			errorFolderAssign.setText("El nombre de carpeta o feed es incorrecto/ El feed se encuentra ya en otra carpeta");
+		}else{
+			loadMain(textFeedTag);
+		}
+		
+	}
+	
+	//----- Delete Controller -----
+	
+	public void loadDeleteFeed(){
+		windowLoader.loadDeleteFeed(btnNewFolder);
+	}
+	
+	public void deleteFeed(){
+		String feed = feedName.getText();
+		
+		int done = dbh.deleteFeed(feed);
+		
+		if(done == 0){
+			errorDeleteTag.setText("El nombre de  feed es incorrecto");
+		}else{
+			loadMain(errorDeleteTag);
+		}
+	}
+	
+	
+	
 }

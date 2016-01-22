@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane prefHeight="600.0" prefWidth="800.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="controller.ControllerMain">
+  <!-- TODO Add Nodes -->
+  <children>
+    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="104.0" layoutX="0.0" layoutY="0.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="800.0" />
+    <Label id="labelFolderName" layoutX="37.0" layoutY="30.0" prefHeight="44.0" prefWidth="657.0" text="Elimina un Feed" textFill="WHITE">
+      <font>
+        <Font size="25.0" />
+      </font>
+    </Label>
+    <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#0083cc" height="44.0" layoutX="1.0" layoutY="104.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="800.0" />
+    <TextField id="newName" fx:id="feedName" layoutX="147.0" layoutY="115.0" prefWidth="202.0" promptText="Escribe el nombre del Feed" />
+    <Label id="errorFolder" fx:id="errorDeleteTag" layoutX="510.0" layoutY="118.0" prefWidth="268.0" text="" textFill="RED" />
+    <Button id="btnDeleteFolder" layoutX="373.0" layoutY="115.0" mnemonicParsing="false" onAction="#deleteFeed" text="Eliminar Feed" />
+    <Button fx:id="btnBack" layoutX="685.0" layoutY="42.0" mnemonicParsing="false" onAction="#backFromFolder" prefHeight="28.0" prefWidth="72.0" text="Volver" />
+    <ListView fx:id="listFeeds" layoutX="1.0" layoutY="148.0" prefHeight="452.0" prefWidth="799.0" />
+  </children>
+</AnchorPane>

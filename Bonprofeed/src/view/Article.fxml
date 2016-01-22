@@ -6,8 +6,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
+<?import javafx.scene.web.*?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2">
+<AnchorPane prefHeight="800.0" prefWidth="1200.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="controller.ControllerMain">
   <!-- TODO Add Nodes -->
   <children>
     <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="147.0" layoutX="-2.0" layoutY="-1.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="1211.0" />
@@ -25,5 +26,6 @@
     <Label font="$x1" layoutX="810.0" layoutY="150.0" prefHeight="24.0" prefWidth="69.0" text="Fecha:" />
     <Label fx:id="textDate" font="$x1" layoutX="881.0" layoutY="151.0" prefWidth="271.0" text="Label" />
     <Button id="btn" fx:id="btnBack" layoutX="572.0" layoutY="682.0" mnemonicParsing="false" onAction="#backFromFolder" prefHeight="23.9998779296875" prefWidth="78.0" text="Volver" />
+    <WebView fx:id="htmlContainer" layoutX="37.0" layoutY="188.0" prefHeight="465.0" prefWidth="1135.0" />
   </children>
 </AnchorPane>

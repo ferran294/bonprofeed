@@ -28,7 +28,7 @@ public class TestGetArticles {
 		dbh.insertFeed("urlFeed", "name2");
 		
 		
-		dbh.insertArticle("art1", "content1", "autor1", "http://url.com", "name", new Date() );
+		dbh.insertArticle("art1", "<ul><li>Coffee</li><li>Tea</li><li>Milk</li></ul> ", "autor1", "http://url.com", "name", new Date() );
 		dbh.insertArticle("art2", "content2", "autor2", "http://url2.com", "name2", new GregorianCalendar(2016, 1, 2, 10, 30).getTime() );
 	
 	}
