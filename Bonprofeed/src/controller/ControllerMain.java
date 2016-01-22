@@ -60,7 +60,6 @@ import model.Tag;
 public class ControllerMain implements Initializable{
 	
 	private DatabaseHandler dbh = new DatabaseHandler();
-	private RomeOperations rome;
 	private WindowLoader windowLoader = new WindowLoader();
 	private static Folder actualFolder;
 	private Article actualArticle;
@@ -69,6 +68,7 @@ public class ControllerMain implements Initializable{
 	ArrayList<Feed> feeds = dbh.getAllFeeds();
 	@FXML TreeView<String> folderTree;
 	@FXML TreeView<String> tagTree;
+	//Article table from Main
 	@FXML
 	private TableView<Article> articlesList;
 	@FXML
@@ -80,6 +80,19 @@ public class ControllerMain implements Initializable{
 	@FXML
 	private TableColumn<Article, Date> columnDate;
 	@FXML private AnchorPane panelArticles;
+	//Article table from feed
+	@FXML
+	private TableView<Article> articlesListFeed;
+	@FXML
+	private TableColumn<Article, Integer> columnVistoFeed;
+	@FXML
+	private TableColumn<Article, String> columnTitleFeed;
+	@FXML
+	private TableColumn<Article, String> columnAuthorFeed;
+	@FXML
+	private TableColumn<Article, Date> columnDateFeed;
+	@FXML
+	private Label textFeedTitle;
 	//Folder view
 	@FXML
 	private Label labelFolderName;
@@ -252,6 +265,7 @@ public class ControllerMain implements Initializable{
             
             if(treeItem.isLeaf()){
             	Feed feedSelected = getFeed(feeds,treeItem.getValue().toString());
+            	
             	windowLoader.loadFeedWindow(feedSelected,treeItem,folderTree);
             }
             
@@ -382,14 +396,14 @@ public class ControllerMain implements Initializable{
 		String folderName = labelFolderName.getText();
 		String feedName = feedNameDis.getText();
 		
-		//int done = dbh.deallocateFolder(feedName, folderName);
-		/*
+		int done = dbh.disassignFromFolder(feedName);
+		
 		if(done == 0){
 			errorFolder.setText("El feed no existe");
 		}else{
 			loadMain(feedNameDis);
 		}
-		*/
+		
 	}
 	
 	public void deleteFolder(){
@@ -567,15 +581,17 @@ public class ControllerMain implements Initializable{
 	//------ Feed controller ----
 	
 	public void setActualFeed(Feed feed){
+		
+		textFeedTitle.setText(feed.getName());
 		ObservableList<Article> articles = FXCollections.observableArrayList(dbh.getArticlesFromFeed(feed.getName()));
-		ArticleTable articleTable = new ArticleTable(articlesList, columnVisto, columnTitle, columnAuthor, columnDate);
+		ArticleTable articleTable = new ArticleTable(articlesListFeed, columnVistoFeed, columnTitleFeed, columnAuthorFeed, columnDateFeed);
 		ArticleTableLoader tableLoader = new ArticleTableLoader(articleTable, articles, windowLoader);
 		tableLoader.generateArticleTable();
 	}
 	
 	public Feed getFeed(ArrayList<Feed> feeds,String feedName){
 		for(Feed f : feeds){
-	        if(f.getName() == feedName){
+	        if(f.getName().equals(feedName)){
 	        	return f;
 	        }
 	    }

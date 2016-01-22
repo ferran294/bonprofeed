@@ -249,7 +249,7 @@ public class WindowLoader {
 		
 		try {
 			setActualView("feed");
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Article.fxml"));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Feed.fxml"));
 			root = (Parent) loader.load();
 			stage = (Stage) element.getScene().getWindow();
 			
