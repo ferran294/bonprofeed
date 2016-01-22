@@ -90,6 +90,42 @@ public class RomeOperations {
 		
 	}
 	
+	public void pushArticlesIntoDatabase( String name, String link ) {
+		DatabaseHandler dbh = new DatabaseHandler();
+		
+		SyndFeedInput input = new SyndFeedInput();			
+		SyndFeed feed;
+		
+		URL feedUrl;
+		
+		try {
+			feedUrl = new URL ( link );
+			feed = input.build( new XmlReader( feedUrl ));
+		
+			List<SyndEntry> entryList = feed.getEntries();
+			
+			for ( int i = 0; i < 15; i++ ) {
+				String author = entryList.get(i).getAuthor();
+				String content = entryList.get(i).getDescription().getValue();
+				String title = entryList.get(i).getTitle();
+				String url = entryList.get(i).getLink();
+				Date date = entryList.get(i).getPublishedDate();
+				
+				dbh.insertArticle(title, content, author, link, name, date );
+			}
+			
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (FeedException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
 	public void updateArticles() {
 		
 		DatabaseHandler dbh = new DatabaseHandler();
