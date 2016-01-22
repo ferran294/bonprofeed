@@ -28,7 +28,7 @@ public class TestRenameTags {
 	public void rename_Tag() {
 		
 		String newName = "Renamed";
-		int success = dbh.renameTag( "Tag", newName );
+		int success = dbh.renameTag( "Tag 2", newName );
 	
 		assertEquals( 1, success );
 	}
