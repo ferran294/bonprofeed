@@ -945,7 +945,7 @@ public int renameTag( String oldName, String newName ) {
 		ResultSet rs = null;
 		
 		try {
-			sta = con.prepareStatement( "SELECT name, link FROM feeds;");
+			sta = con.prepareStatement( "SELECT name, url FROM feeds;");
 			rs = sta.executeQuery();
 			
 			while( rs.next() ) {
@@ -995,5 +995,6 @@ public int renameTag( String oldName, String newName ) {
 		
 		return ret;
 	}
+	
 	
 }
