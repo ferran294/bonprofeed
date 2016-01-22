@@ -23,10 +23,38 @@
     <Label id="errorFolder" fx:id="textErrorTag" layoutX="410.0" layoutY="119.0" prefWidth="219.0" text="" textFill="RED" />
     <Button id="btnDeleteFolder" fx:id="btnDeleteTag" layoutX="640.0" layoutY="117.0" mnemonicParsing="false" onAction="#deleteTag" text="Eliminar Etiqueta" />
     <Button fx:id="btnBack" layoutX="686.0" layoutY="43.0" mnemonicParsing="false" onAction="#backFromFolder" prefHeight="28.0" prefWidth="72.0" text="Volver" />
-    <ListView id="listFeeds" fx:id="listFeedsTag" layoutX="35.0" layoutY="200.0" prefHeight="361.0" prefWidth="512.0" />
     <Label layoutX="568.0" layoutY="229.0" text="Desasigna un Feed de la etiqueta" />
     <TextField fx:id="feedDisTag" layoutX="578.0" layoutY="264.0" prefWidth="200.0" promptText="Nombre del Feed" />
     <Button layoutX="627.0" layoutY="312.0" mnemonicParsing="false" onAction="#disassignFeedFromTag" text="Desasignar" />
     <Label fx:id="errorDisTag" layoutX="578.0" layoutY="389.0" prefWidth="200.0" text="" />
+    <TabPane layoutX="29.0" layoutY="183.0" prefHeight="385.0" prefWidth="522.0" tabClosingPolicy="UNAVAILABLE">
+      <tabs>
+        <Tab text="Articles">
+          <content>
+            <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+              <children>
+                <ListView id="listArticlesFolder" prefHeight="349.0" prefWidth="483.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+              </children>
+            </AnchorPane>
+          </content>
+        </Tab>
+        <Tab text="Feeds">
+          <content>
+            <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+              <children>
+                <TableView id="articlesList" fx:id="articlesListTag" prefHeight="349.0" prefWidth="483.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <columns>
+                    <TableColumn editable="false" prefWidth="75.0" text="Visto" fx:id="columnVistoTag" />
+                    <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="245.0" resizable="true" sortable="false" text="Titulo" fx:id="columnTitleTag" />
+                    <TableColumn maxWidth="5000.0" minWidth="0.0" prefWidth="100.0" text="Autor" fx:id="columnAuthorTag" />
+                    <TableColumn editable="false" maxWidth="5000.0" minWidth="10.0" prefWidth="100.0" text="Fecha" fx:id="columnDateTag" />
+                  </columns>
+                </TableView>
+              </children>
+            </AnchorPane>
+          </content>
+        </Tab>
+      </tabs>
+    </TabPane>
   </children>
 </AnchorPane>
