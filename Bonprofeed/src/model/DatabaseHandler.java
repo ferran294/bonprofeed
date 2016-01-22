@@ -950,7 +950,7 @@ public int renameTag( String oldName, String newName ) {
 			
 			while( rs.next() ) {
 				String name = rs.getString( "name" );
-				String link = rs.getString( "link" );
+				String link = rs.getString( "url" );
 				
 				Feed feed = new Feed( name, link );
 			
